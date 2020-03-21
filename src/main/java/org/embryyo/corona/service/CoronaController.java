@@ -1,6 +1,7 @@
 package org.embryyo.corona.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,9 +17,9 @@ public class CoronaController {
     }
 
     @GetMapping("/otp")
-    public String sendOTP(@RequestParam("number") String number) {
-        String otp = serviceManager.getOtp(number);
-        return otp;
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void sendOTP(@RequestParam("number") String number) {
+        serviceManager.getOtp(number);
     }
 
     @PostMapping("/register")

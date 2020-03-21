@@ -19,6 +19,7 @@ public class ServiceManager {
     }
 
     public String getOtp(String number) {
+        // TODO: Send otp using SMS Service;
         return "000000";
     }
 
