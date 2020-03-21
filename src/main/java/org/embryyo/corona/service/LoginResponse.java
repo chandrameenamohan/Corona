@@ -2,37 +2,33 @@ package org.embryyo.corona.service;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.java.Log;
 
 public class LoginResponse {
-    private String userGUID;
-    private String name;
+    private boolean isNewUser;
+    private Patient patient;
 
-    public LoginResponse(String userGUID, String name) {
-        this.userGUID = userGUID;
-        this.name = name;
+    public LoginResponse(boolean isNewUser) {
+        this.isNewUser = isNewUser;
     }
 
-    public String getUserGUID() {
-        return userGUID;
+    public LoginResponse(Patient patient) {
+        this.patient = patient;
     }
 
-    public void setUserGUID(String userGUID) {
-        this.userGUID = userGUID;
+    public boolean getIsNewUser() {
+        return isNewUser;
     }
 
-    public String getName() {
-        return name;
+    public void setIsNewUser(boolean newUser) {
+        isNewUser = newUser;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public Patient getPatient() {
+        return patient;
     }
 
-    @Override
-    public String toString() {
-        return "LoginResponse{" +
-                "userGUID='" + userGUID + '\'' +
-                ", name='" + name + '\'' +
-                '}';
+    public void setPatient(Patient patient) {
+        this.patient = patient;
     }
 }

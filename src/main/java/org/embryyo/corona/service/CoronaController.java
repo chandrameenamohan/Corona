@@ -11,6 +11,7 @@ public class CoronaController {
     private ServiceManager serviceManager;
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public LoginResponse login(@RequestBody LoginRequest loginRequest) {
         LoginResponse loginResponse = serviceManager.login(loginRequest);
         return loginResponse;
