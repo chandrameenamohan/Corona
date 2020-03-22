@@ -1,9 +1,5 @@
 package org.embryyo.corona.service;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.java.Log;
-
 public class LoginResponse {
     private boolean isNewUser;
     private Patient patient;

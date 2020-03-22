@@ -1,7 +1,0 @@
-server:
-  port: 5000
-  contextPath: /v1
-
-spring:
-  application:
-    name: coronaservice
