@@ -3,6 +3,7 @@ package org.embryyo.corona.service.core;
 import org.embryyo.corona.service.dto.*;
 import org.embryyo.corona.service.exception.AuthFailException;
 import org.embryyo.corona.service.exception.InvalidOTPException;
+import org.embryyo.corona.service.exception.NotFoundException;
 import org.embryyo.corona.service.model.Otp;
 import org.embryyo.corona.service.model.Patient;
 import org.embryyo.corona.service.model.PatientSymptom;
@@ -68,6 +69,17 @@ public class ServiceManager {
         return false;
     }
 
+    public void requestValidation(String number, String token) {
+        Otp otpObj = otpRepository.findByMobileNumber(number);
+        if (otpObj == null) {
+            throw new NotFoundException(String
+                    .format("Patient is not registed yet for mobile: %s", number));
+        }
+        if (!otpObj.getToken().equalsIgnoreCase(token)) {
+            throw new AuthFailException("authorization failed");
+        }
+    }
+
     public String getOtp(String number) {
         // TODO: Send otp using SMS Service;
         String otp = generateOtp(number);
@@ -93,13 +105,15 @@ public class ServiceManager {
         return "000000";
     }
 
-    public Patient register(Patient patient) {
-        Patient p = patientRepository.save(patient);
-        return p;
+    public int register(PatientDTO patient) {
+        Patient storeP = enricher.fromPatientDTO(patient);
+        Patient storedP = patientRepository.save(storeP);
+        return storedP.getId();
     }
 
-    public Patient getPatient(int id) {
-        return patientRepository.findById(id).get();
+    public PatientDTO getPatient(int id) {
+        Patient p = patientRepository.findById(id).get();
+        return enricher.fromPatientDO(p);
     }
 
     public void addPatientSymptom(RecordDTO record, int patientId) {

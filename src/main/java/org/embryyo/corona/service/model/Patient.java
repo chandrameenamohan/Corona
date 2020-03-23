@@ -22,6 +22,7 @@ public class Patient {
     @Column(unique = true)
     private String mobileNumber;
     private Date dob;
+    private int age;
     private String gender;
 
     private String address;
@@ -179,5 +180,13 @@ public class Patient {
 
     public void setHighRisk(boolean highRisk) {
         isHighRisk = highRisk;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 }

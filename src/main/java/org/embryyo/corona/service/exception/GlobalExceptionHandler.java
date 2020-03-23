@@ -18,7 +18,14 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AuthFailException.class)
     public ApiError handleAuthorizationFailException(Exception ex) {
-        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        ApiError error = new ApiError(HttpStatus.FORBIDDEN, ex.getMessage());
+        return error;
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public ApiError handleNotFoundException(Exception ex) {
+        ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
         return error;
     }
 }

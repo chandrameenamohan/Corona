@@ -1,8 +1,9 @@
 package org.embryyo.corona.service.dto;
 
-import java.sql.Date;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.util.Date;
 
 public class PatientDTO {
     private int id;
@@ -11,7 +12,7 @@ public class PatientDTO {
     private String lastName;
 
     private String mobileNumber;
-    private Date dob;
+    private long dob;
     private int age;
     private String gender;
 
@@ -20,7 +21,70 @@ public class PatientDTO {
     private String state;
     private int pincode;
 
-    private List<RecordDTO> records;
+    // Covid Related Data;
+    private String patientId; //patient code
+    private String covidState; // +ive, -ive
+    private String moniorState; // suspected, confirmed, active, recovered, deceased
+    private String transmissionType; // local, international
+    private String caseType; // mild, moderate, severe
+    private String advice; // Home Quarantine, Admin and Test, call helpline, symptomatic management
+    private boolean isHighRisk; // high-risk individuals
+
+    public String getPatientId() {
+        return patientId;
+    }
+
+    public void setPatientId(String patientId) {
+        this.patientId = patientId;
+    }
+
+    public String getCovidState() {
+        return covidState;
+    }
+
+    public void setCovidState(String covidState) {
+        this.covidState = covidState;
+    }
+
+    public String getMoniorState() {
+        return moniorState;
+    }
+
+    public void setMoniorState(String moniorState) {
+        this.moniorState = moniorState;
+    }
+
+    public String getTransmissionType() {
+        return transmissionType;
+    }
+
+    public void setTransmissionType(String transmissionType) {
+        this.transmissionType = transmissionType;
+    }
+
+    public String getCaseType() {
+        return caseType;
+    }
+
+    public void setCaseType(String caseType) {
+        this.caseType = caseType;
+    }
+
+    public String getAdvice() {
+        return advice;
+    }
+
+    public void setAdvice(String advice) {
+        this.advice = advice;
+    }
+
+    public boolean getIsHighRisk() {
+        return isHighRisk;
+    }
+
+    public void setIsHighRisk(boolean highRisk) {
+        isHighRisk = highRisk;
+    }
 
     public int getId() {
         return id;
@@ -54,11 +118,11 @@ public class PatientDTO {
         this.mobileNumber = mobileNumber;
     }
 
-    public Date getDob() {
+    public long getDob() {
         return dob;
     }
 
-    public void setDob(Date dob) {
+    public void setDob(long dob) {
         this.dob = dob;
     }
 
@@ -110,38 +174,6 @@ public class PatientDTO {
         this.pincode = pincode;
     }
 
-    public List<RecordDTO> getRecords() {
-        return records;
-    }
-
-    public void setRecords(List<RecordDTO> records) {
-        this.records = records;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PatientDTO dto = (PatientDTO) o;
-        return id == dto.id &&
-                age == dto.age &&
-                pincode == dto.pincode &&
-                Objects.equals(firstName, dto.firstName) &&
-                Objects.equals(lastName, dto.lastName) &&
-                Objects.equals(mobileNumber, dto.mobileNumber) &&
-                Objects.equals(dob, dto.dob) &&
-                Objects.equals(gender, dto.gender) &&
-                Objects.equals(address, dto.address) &&
-                Objects.equals(city, dto.city) &&
-                Objects.equals(state, dto.state) &&
-                Objects.equals(records, dto.records);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, mobileNumber, dob, age, gender, address, city, state, pincode, records);
-    }
-
     @Override
     public String toString() {
         return "PatientDTO{" +
@@ -156,7 +188,30 @@ public class PatientDTO {
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", pincode=" + pincode +
-                ", records=" + records +
+                ", patientId='" + patientId + '\'' +
+                ", covidState='" + covidState + '\'' +
+                ", moniorState='" + moniorState + '\'' +
+                ", transmissionType='" + transmissionType + '\'' +
+                ", caseType='" + caseType + '\'' +
+                ", advice='" + advice + '\'' +
+                ", isHighRisk=" + isHighRisk +
                 '}';
+    }
+
+    public static void main(String[] args) throws JsonProcessingException {
+        PatientDTO patientDTO = new PatientDTO();
+        patientDTO.setState("Karnataka");
+        patientDTO.setPincode(560037);
+        patientDTO.setMobileNumber("9686399655");
+        patientDTO.setLastName("Meena");
+        patientDTO.setFirstName("Chandra Mohan");
+        patientDTO.setGender("Male");
+        patientDTO.setCity("Bangalore");
+        patientDTO.setAge(31);
+        patientDTO.setAddress("604 1B Soul Space Arista");
+        patientDTO.setDob(new Date().getTime());
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(patientDTO);
+        System.out.println(json);
     }
 }

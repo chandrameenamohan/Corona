@@ -8,6 +8,7 @@ import org.embryyo.corona.service.model.Symptom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,6 +27,7 @@ public class CoronaController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         String token = request.getHeader("token");
+        serviceManager.requestValidation(loginRequest.getNumber(),token);
         LoginResponse loginResponse = serviceManager.login(loginRequest,token);
         return loginResponse;
     }
@@ -38,15 +40,24 @@ public class CoronaController {
     }
 
     @PostMapping("/patients")
-    public PatientDTO register(@RequestBody Patient patient) {
-        Patient p = serviceManager.register(patient);
-        return patientEnricher.fromPatientDO(p);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void register(@RequestBody PatientDTO patient, HttpServletRequest request,
+                               HttpServletResponse response) {
+        String token = request.getHeader("token");
+        serviceManager.requestValidation(patient.getMobileNumber(),token);
+        int id = serviceManager.register(patient);
+        response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/patients/" + id).toUriString());
     }
 
     @GetMapping("/patients/{id}")
-    public PatientDTO getPatient(@PathVariable("id") int id) {
-        Patient p = serviceManager.getPatient(id);
-        return patientEnricher.fromPatientDO(p);
+    @ResponseStatus(HttpStatus.OK)
+    public PatientDTO getPatient(@PathVariable("id") int id, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        // TODO: Bad Auth Check; Just for testing level
+        PatientDTO p = serviceManager.getPatient(id);
+        serviceManager.requestValidation(p.getMobileNumber(),token);
+        return p;
     }
 
     @PostMapping("/patients/{id}/symptoms")
