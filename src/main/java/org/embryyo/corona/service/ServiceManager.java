@@ -71,11 +71,11 @@ public class ServiceManager {
     }
 
     public Patient register(Patient patient) {
-        memDB.put("",patient);
-        return patient;
+        Patient p = patientRepository.save(patient);
+        return p;
     }
 
-    public Patient getPatient(String id) {
-        return memDB.get(id);
+    public Patient getPatient(int id) {
+        return patientRepository.findById(id).get();
     }
 }

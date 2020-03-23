@@ -29,8 +29,8 @@ public class CoronaController {
         return p;
     }
 
-    @GetMapping("/patient/{guid}")
-    public Patient getPatient(@PathVariable("guid") String id) {
+    @GetMapping("/patient/{id}")
+    public Patient getPatient(@PathVariable("id") int id) {
         Patient p = serviceManager.getPatient(id);
         return p;
     }
