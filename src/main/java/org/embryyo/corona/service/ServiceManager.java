@@ -38,6 +38,10 @@ public class ServiceManager {
     private Patient verifyAndGet(LoginRequest loginRequest) {
         Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
         // TODO: Add otp expires logic
+        if (!otpObj.getOtp().equals(loginRequest.getOtp())) {
+            throw new InvalidOTPException(String
+                    .format("Given OTP:%s has not matched",loginRequest.getOtp()));
+        }
         Patient p = patientRepository.findByMobileNumber(otpObj.getMobileNumber());
         return p;
     }
