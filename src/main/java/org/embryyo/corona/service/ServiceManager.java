@@ -3,15 +3,12 @@ package org.embryyo.corona.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class ServiceManager {
-
-    private Map<String,Patient> memDB = new HashMap<>();
 
     @Autowired
     private OtpRepository otpRepository;
@@ -25,6 +22,9 @@ public class ServiceManager {
     @Autowired
     private PatientSymptomRepository patientSymptomRepository;
 
+    @Autowired
+    private PatientEnricher patientEnricher;
+
     public LoginResponse login(LoginRequest loginRequest) {
         /**
          * TODO: Add the logic of login
@@ -36,7 +36,7 @@ public class ServiceManager {
         if (patient == null) {
             return new LoginResponse(true);
         }
-        return new LoginResponse(patient);
+        return new LoginResponse(patientEnricher.from(patient));
     }
 
     private Patient verifyAndGet(LoginRequest loginRequest) {

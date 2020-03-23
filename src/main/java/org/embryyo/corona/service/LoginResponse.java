@@ -2,13 +2,13 @@ package org.embryyo.corona.service;
 
 public class LoginResponse {
     private boolean isNewUser;
-    private Patient patient;
+    private PatientDTO patient;
 
     public LoginResponse(boolean isNewUser) {
         this.isNewUser = isNewUser;
     }
 
-    public LoginResponse(Patient patient) {
+    public LoginResponse(PatientDTO patient) {
         this.patient = patient;
     }
 
@@ -20,11 +20,11 @@ public class LoginResponse {
         isNewUser = newUser;
     }
 
-    public Patient getPatient() {
+    public PatientDTO getPatient() {
         return patient;
     }
 
-    public void setPatient(Patient patient) {
+    public void setPatient(PatientDTO patient) {
         this.patient = patient;
     }
 }

@@ -3,7 +3,8 @@ package org.embryyo.corona.service;
 import javax.persistence.*;
 import java.sql.Date;
 
-@Entity
+//@Entity
+/*
 public class PatientFlow {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -23,3 +24,6 @@ public class PatientFlow {
     private String city;
     private String state;
 }
+
+
+ */

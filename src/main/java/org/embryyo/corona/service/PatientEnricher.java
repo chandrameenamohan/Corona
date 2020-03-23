@@ -25,13 +25,15 @@ public class PatientEnricher {
         Set<PatientSymptom> symptoms = patient.getPatientSymptoms();
         List<PatientSymptomDTO> symptomDTOS = new ArrayList<>();
         dto.setSymptoms(symptomDTOS);
-        for (PatientSymptom ps : symptoms) {
-            PatientSymptomDTO symptomDTO = new PatientSymptomDTO();
-            symptomDTO.setSymptom(ps.getSymptom().getName());
-            symptomDTO.setSeverity(ps.getSeverity());
-            symptomDTO.setRecordTime(ps.getTime());
-            symptomDTO.setComment(ps.getNote());
-            symptomDTOS.add(symptomDTO);
+        if (symptoms != null) {
+            for (PatientSymptom ps : symptoms) {
+                PatientSymptomDTO symptomDTO = new PatientSymptomDTO();
+                symptomDTO.setSymptom(ps.getSymptom().getName());
+                symptomDTO.setSeverity(ps.getSeverity());
+                symptomDTO.setRecordTime(ps.getTime());
+                symptomDTO.setComment(ps.getNote());
+                symptomDTOS.add(symptomDTO);
+            }
         }
         return dto;
     }

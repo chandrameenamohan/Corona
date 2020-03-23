@@ -13,8 +13,8 @@ public class Patient {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
     private Set<PatientSymptom> patientSymptoms;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
-    private Set<PatientFlow> patientFlows;
+//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
+//    private Set<PatientFlow> patientFlows;
 
     @Column(unique = true)
     private String patientId; // this is to match with his global patient-code
@@ -49,13 +49,13 @@ public class Patient {
         this.patientSymptoms = patientSymptoms;
     }
 
-    public Set<PatientFlow> getPatientFlows() {
-        return patientFlows;
-    }
-
-    public void setPatientFlows(Set<PatientFlow> patientFlows) {
-        this.patientFlows = patientFlows;
-    }
+//    public Set<PatientFlow> getPatientFlows() {
+//        return patientFlows;
+//    }
+//
+//    public void setPatientFlows(Set<PatientFlow> patientFlows) {
+//        this.patientFlows = patientFlows;
+//    }
 
     public String getPatientId() {
         return patientId;
