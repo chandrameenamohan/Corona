@@ -14,4 +14,11 @@ public class GlobalExceptionHandler {
         ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
         return error;
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(AuthFailException.class)
+    public ApiError handleAuthorizationFailException(Exception ex) {
+        ApiError error = new ApiError(HttpStatus.BAD_REQUEST, ex.getMessage());
+        return error;
+    }
 }

@@ -1,6 +1,7 @@
 package org.embryyo.corona.service.core;
 
 import org.embryyo.corona.service.dto.*;
+import org.embryyo.corona.service.exception.AuthFailException;
 import org.embryyo.corona.service.exception.InvalidOTPException;
 import org.embryyo.corona.service.model.Otp;
 import org.embryyo.corona.service.model.Patient;
@@ -35,22 +36,25 @@ public class ServiceManager {
     @Autowired
     private Enricher enricher;
 
-    public LoginResponse login(LoginRequest loginRequest) {
+    public LoginResponse login(LoginRequest loginRequest, String token) {
         /**
          * TODO: Add the logic of login
          * verify number and otp
          * if new user then send register request
          * else context
          */
-        Patient patient = verifyAndGet(loginRequest);
+        Patient patient = verifyAndGet(loginRequest,token);
         if (patient == null) {
             return new LoginResponse(true);
         }
         return new LoginResponse(enricher.fromPatientDO(patient));
     }
 
-    private Patient verifyAndGet(LoginRequest loginRequest) {
+    private Patient verifyAndGet(LoginRequest loginRequest, String token) {
         Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
+        if (!otpObj.getToken().equalsIgnoreCase(token)) {
+            throw new AuthFailException("authorization failed");
+        }
         // TODO: Add otp expires logic
         if (!otpObj.getOtp().equals(loginRequest.getOtp())) {
             throw new InvalidOTPException(String
@@ -64,7 +68,7 @@ public class ServiceManager {
         return false;
     }
 
-    public void getOtp(String number) {
+    public String getOtp(String number) {
         // TODO: Send otp using SMS Service;
         String otp = generateOtp(number);
         Otp otpObj = otpRepository.findByMobileNumber(number);
@@ -79,6 +83,7 @@ public class ServiceManager {
         otpObj.setExpireTimeInSeconds(180);
         otpObj.setToken(UUID.randomUUID().toString());
         otpRepository.save(otpObj);
+        return otpObj.getToken();
     }
 
     private String generateOtp(String number) {

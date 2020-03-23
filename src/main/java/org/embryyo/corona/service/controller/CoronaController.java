@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
@@ -22,15 +24,17 @@ public class CoronaController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public LoginResponse login(@RequestBody LoginRequest loginRequest) {
-        LoginResponse loginResponse = serviceManager.login(loginRequest);
+    public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+        String token = request.getHeader("token");
+        LoginResponse loginResponse = serviceManager.login(loginRequest,token);
         return loginResponse;
     }
 
     @GetMapping("/otp")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void sendOTP(@RequestParam("number") String number) {
-        serviceManager.getOtp(number);
+    public void sendOTP(@RequestParam("number") String number, HttpServletResponse response) {
+        String token = serviceManager.getOtp(number);
+        response.setHeader("token",token);
     }
 
     @PostMapping("/patients")
