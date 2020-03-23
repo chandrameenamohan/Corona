@@ -11,7 +11,7 @@ public class Patient {
     private Integer id;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
-    private Set<PatientSymptoms> patientSymptoms;
+    private Set<PatientSymptom> patientSymptoms;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
     private Set<PatientFlow> patientFlows;
@@ -41,11 +41,11 @@ public class Patient {
         this.id = id;
     }
 
-    public Set<PatientSymptoms> getPatientSymptoms() {
+    public Set<PatientSymptom> getPatientSymptoms() {
         return patientSymptoms;
     }
 
-    public void setPatientSymptoms(Set<PatientSymptoms> patientSymptoms) {
+    public void setPatientSymptoms(Set<PatientSymptom> patientSymptoms) {
         this.patientSymptoms = patientSymptoms;
     }
 

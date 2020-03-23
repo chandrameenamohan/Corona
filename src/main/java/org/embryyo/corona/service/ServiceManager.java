@@ -5,9 +5,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @Component
@@ -20,6 +18,12 @@ public class ServiceManager {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private SymptopRepository symptopRepository;
+
+    @Autowired
+    private PatientSymptomRepository patientSymptomRepository;
 
     public LoginResponse login(LoginRequest loginRequest) {
         /**
@@ -77,5 +81,34 @@ public class ServiceManager {
 
     public Patient getPatient(int id) {
         return patientRepository.findById(id).get();
+    }
+
+    public void addPatientSymptom(List<SymptomRecord> record, int patientId) {
+        List<Symptom> symptoms = new ArrayList<>();
+        Map<String,SymptomRecord> symptomToRecord = new HashMap<>();
+        for (SymptomRecord sr : record) {
+            Symptom s = symptopRepository
+                    .findByName(sr.getSymptom());
+            symptoms.add(s);
+            symptomToRecord.put(sr.getSymptom(),sr);
+        }
+        List<PatientSymptom> patientSymptoms = new ArrayList<>();
+        Patient p = patientRepository.findById(patientId).get();
+        for (Symptom s : symptoms) {
+            PatientSymptom patientSymptom = new PatientSymptom();
+            patientSymptom.setPatient(p);
+            patientSymptom.setSymptom(s);
+            SymptomRecord sr = symptomToRecord.get(s.getName());
+            patientSymptom.setSeverity(sr.getSeverity());
+            patientSymptom.setNote(sr.getComment());
+            patientSymptom.setTime(new Timestamp(sr
+                    .getTime().getTime()));
+            patientSymptoms.add(patientSymptom);
+        }
+        for (PatientSymptom ps : patientSymptoms) patientSymptomRepository.save(ps);
+    }
+
+    public void addSymptom(Symptom s) {
+        symptopRepository.save(s);
     }
 }
