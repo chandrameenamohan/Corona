@@ -137,8 +137,11 @@ public class ServiceManager {
         patientSymptomRepository.saveAll(patientSymptomsDO);
     }
 
-    public void addSymptom(Symptom s) {
-        symptopRepository.save(s);
+    public void addSymptom(SymptomDTO s) {
+        Symptom symptom = new Symptom();
+        symptom.setDisplayName(s.getDisplayName());
+        symptom.setName(s.getName());
+        symptopRepository.save(symptom);
     }
 
     public List<SymptomDTO> getSymptoms() {

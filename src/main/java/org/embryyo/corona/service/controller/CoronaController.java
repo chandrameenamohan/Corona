@@ -74,7 +74,7 @@ public class CoronaController {
     }
 
     @PostMapping("/symptoms")
-    public void addSymptoms(@RequestBody Symptom s) {
+    public void addSymptoms(@RequestBody SymptomDTO s) {
         serviceManager.addSymptom(s);
     }
 
