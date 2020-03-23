@@ -77,6 +77,7 @@ public class ServiceManager {
         otpObj.setStoringTime(timestamp);
         otpObj.setOtp(otp);
         otpObj.setExpireTimeInSeconds(180);
+        otpObj.setToken(UUID.randomUUID().toString());
         otpRepository.save(otpObj);
     }
 
@@ -97,29 +98,6 @@ public class ServiceManager {
     }
 
     public void addPatientSymptom(RecordDTO record, int patientId) {
-        List<Symptom> symptoms = new ArrayList<>();
-        Map<String, PatientSymptomDTO> symptomToRecord = new HashMap<>();
-        for (PatientSymptomDTO patientSymptomDTO : record.getSymptoms()) {
-            Symptom s = symptopRepository
-                    .findByName(patientSymptomDTO.getName());
-            symptoms.add(s);
-            symptomToRecord.put(patientSymptomDTO.getName(), patientSymptomDTO);
-        }
-        List<PatientSymptom> patientSymptoms = new ArrayList<>();
-        Patient p = patientRepository.findById(patientId).get();
-        final long recordSequence = System.nanoTime();
-        for (Symptom s : symptoms) {
-            PatientSymptom patientSymptom = new PatientSymptom();
-            patientSymptom.setPatient(p);
-            patientSymptom.setSymptom(s);
-            PatientSymptomDTO sr = symptomToRecord.get(s.getName());
-            patientSymptom.setSeverity(sr.getSeverity());
-            patientSymptom.setNote(record.getNote());
-            patientSymptom.setTime(new Timestamp(record.getDate()));
-            patientSymptom.setRecordSequence(recordSequence);
-            patientSymptoms.add(patientSymptom);
-        }
-        patientSymptomRepository.saveAll(patientSymptoms);
     }
 
     public void addSymptom(Symptom s) {

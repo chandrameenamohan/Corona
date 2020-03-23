@@ -19,6 +19,8 @@ public class Otp {
 
     private int expireTimeInSeconds;
 
+    private String token;
+
     public Integer getId() {
         return id;
     }
@@ -57,5 +59,13 @@ public class Otp {
 
     public void setExpireTimeInSeconds(int expireTimeInSeconds) {
         this.expireTimeInSeconds = expireTimeInSeconds;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

@@ -2,6 +2,7 @@ package org.embryyo.corona.service.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
 public class PatientSymptom {
@@ -10,16 +11,14 @@ public class PatientSymptom {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+    @JoinColumn(name = "healthRecord_id", nullable = false)
+    private HealthRecord healthRecord;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "symptom_id", nullable = false)
     private Symptom symptom;
+
     private String severity;
-    private String note;
-    private Timestamp time;
-    private long recordSequence;
 
     public Integer getId() {
         return id;
@@ -29,12 +28,12 @@ public class PatientSymptom {
         this.id = id;
     }
 
-    public Patient getPatient() {
-        return patient;
+    public HealthRecord getHealthRecord() {
+        return healthRecord;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public void setHealthRecord(HealthRecord healthRecord) {
+        this.healthRecord = healthRecord;
     }
 
     public Symptom getSymptom() {
@@ -51,29 +50,5 @@ public class PatientSymptom {
 
     public void setSeverity(String severity) {
         this.severity = severity;
-    }
-
-    public String getNote() {
-        return note;
-    }
-
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public Timestamp getTime() {
-        return time;
-    }
-
-    public void setTime(Timestamp time) {
-        this.time = time;
-    }
-
-    public long getRecordSequence() {
-        return recordSequence;
-    }
-
-    public void setRecordSequence(long recordSequence) {
-        this.recordSequence = recordSequence;
     }
 }

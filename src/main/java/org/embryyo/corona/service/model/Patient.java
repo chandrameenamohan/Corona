@@ -11,10 +11,7 @@ public class Patient {
     private Integer id;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
-    private Set<PatientSymptom> patientSymptoms;
-
-//    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
-//    private Set<PatientFlow> patientFlows;
+    private Set<HealthRecord> healthRecords;
 
     @Column(unique = true)
     private String patientId; // this is to match with his global patient-code
@@ -25,13 +22,20 @@ public class Patient {
     @Column(unique = true)
     private String mobileNumber;
     private Date dob;
-    private int age;
     private String gender;
 
     private String address;
     private String city;
     private String state;
     private int pincode;
+
+    // Covid Related Data;
+    private String covidState; // +ive, -ive
+    private String moniorState; // suspected, confirmed, active, recovered, deceased
+    private String transmissionType; // local, international
+    private String caseType; // mild, moderate, severe
+    private String advice; // Home Quarantine, Admin and Test, call helpline, symptomatic management
+    private boolean isHighRisk; // high-risk individuals
 
     public Integer getId() {
         return id;
@@ -40,22 +44,6 @@ public class Patient {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Set<PatientSymptom> getPatientSymptoms() {
-        return patientSymptoms;
-    }
-
-    public void setPatientSymptoms(Set<PatientSymptom> patientSymptoms) {
-        this.patientSymptoms = patientSymptoms;
-    }
-
-//    public Set<PatientFlow> getPatientFlows() {
-//        return patientFlows;
-//    }
-//
-//    public void setPatientFlows(Set<PatientFlow> patientFlows) {
-//        this.patientFlows = patientFlows;
-//    }
 
     public String getPatientId() {
         return patientId;
@@ -97,14 +85,6 @@ public class Patient {
         this.dob = dob;
     }
 
-    public int getAge() {
-        return age;
-    }
-
-    public void setAge(int age) {
-        this.age = age;
-    }
-
     public String getGender() {
         return gender;
     }
@@ -143,5 +123,61 @@ public class Patient {
 
     public void setPincode(int pincode) {
         this.pincode = pincode;
+    }
+
+    public Set<HealthRecord> getHealthRecords() {
+        return healthRecords;
+    }
+
+    public void setHealthRecords(Set<HealthRecord> healthRecords) {
+        this.healthRecords = healthRecords;
+    }
+
+    public String getCovidState() {
+        return covidState;
+    }
+
+    public void setCovidState(String covidState) {
+        this.covidState = covidState;
+    }
+
+    public String getMoniorState() {
+        return moniorState;
+    }
+
+    public void setMoniorState(String moniorState) {
+        this.moniorState = moniorState;
+    }
+
+    public String getTransmissionType() {
+        return transmissionType;
+    }
+
+    public void setTransmissionType(String transmissionType) {
+        this.transmissionType = transmissionType;
+    }
+
+    public String getCaseType() {
+        return caseType;
+    }
+
+    public void setCaseType(String caseType) {
+        this.caseType = caseType;
+    }
+
+    public String getAdvice() {
+        return advice;
+    }
+
+    public void setAdvice(String advice) {
+        this.advice = advice;
+    }
+
+    public boolean isHighRisk() {
+        return isHighRisk;
+    }
+
+    public void setHighRisk(boolean highRisk) {
+        isHighRisk = highRisk;
     }
 }
