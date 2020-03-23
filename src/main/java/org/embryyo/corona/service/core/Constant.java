@@ -1,4 +1,4 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.core;
 
 public class Constant {
     public static final int OTP_MIN = 100000;

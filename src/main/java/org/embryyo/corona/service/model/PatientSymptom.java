@@ -1,4 +1,4 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.model;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -16,10 +16,10 @@ public class PatientSymptom {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "symptom_id", nullable = false)
     private Symptom symptom;
-
     private String severity;
     private String note;
     private Timestamp time;
+    private long recordSequence;
 
     public Integer getId() {
         return id;
@@ -67,5 +67,13 @@ public class PatientSymptom {
 
     public void setTime(Timestamp time) {
         this.time = time;
+    }
+
+    public long getRecordSequence() {
+        return recordSequence;
+    }
+
+    public void setRecordSequence(long recordSequence) {
+        this.recordSequence = recordSequence;
     }
 }

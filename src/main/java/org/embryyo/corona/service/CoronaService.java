@@ -9,8 +9,6 @@ import java.util.Collections;
 public class CoronaService {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(CoronaService.class);
-//        app.setDefaultProperties(Collections
-//                .singletonMap("server.port", "5000"));
         app.run(args);
     }
 }

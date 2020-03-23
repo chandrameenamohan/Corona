@@ -1,4 +1,4 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.dto;
 
 import java.sql.Date;
 import java.util.List;
@@ -20,49 +20,7 @@ public class PatientDTO {
     private String state;
     private int pincode;
 
-    private List<PatientSymptomDTO> symptoms;
-
-    @Override
-    public String toString() {
-        return "PatientDTO{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", mobileNumber='" + mobileNumber + '\'' +
-                ", dob=" + dob +
-                ", age=" + age +
-                ", gender='" + gender + '\'' +
-                ", address='" + address + '\'' +
-                ", city='" + city + '\'' +
-                ", state='" + state + '\'' +
-                ", pincode=" + pincode +
-                ", symptoms=" + symptoms +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PatientDTO dto = (PatientDTO) o;
-        return id == dto.id &&
-                age == dto.age &&
-                pincode == dto.pincode &&
-                Objects.equals(firstName, dto.firstName) &&
-                Objects.equals(lastName, dto.lastName) &&
-                Objects.equals(mobileNumber, dto.mobileNumber) &&
-                Objects.equals(dob, dto.dob) &&
-                Objects.equals(gender, dto.gender) &&
-                Objects.equals(address, dto.address) &&
-                Objects.equals(city, dto.city) &&
-                Objects.equals(state, dto.state) &&
-                Objects.equals(symptoms, dto.symptoms);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, mobileNumber, dob, age, gender, address, city, state, pincode, symptoms);
-    }
+    private List<RecordDTO> records;
 
     public int getId() {
         return id;
@@ -152,12 +110,53 @@ public class PatientDTO {
         this.pincode = pincode;
     }
 
-    public List<PatientSymptomDTO> getSymptoms() {
-        return symptoms;
+    public List<RecordDTO> getRecords() {
+        return records;
     }
 
-    public void setSymptoms(List<PatientSymptomDTO> symptoms) {
-        this.symptoms = symptoms;
+    public void setRecords(List<RecordDTO> records) {
+        this.records = records;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PatientDTO dto = (PatientDTO) o;
+        return id == dto.id &&
+                age == dto.age &&
+                pincode == dto.pincode &&
+                Objects.equals(firstName, dto.firstName) &&
+                Objects.equals(lastName, dto.lastName) &&
+                Objects.equals(mobileNumber, dto.mobileNumber) &&
+                Objects.equals(dob, dto.dob) &&
+                Objects.equals(gender, dto.gender) &&
+                Objects.equals(address, dto.address) &&
+                Objects.equals(city, dto.city) &&
+                Objects.equals(state, dto.state) &&
+                Objects.equals(records, dto.records);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, mobileNumber, dob, age, gender, address, city, state, pincode, records);
+    }
+
+    @Override
+    public String toString() {
+        return "PatientDTO{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", mobileNumber='" + mobileNumber + '\'' +
+                ", dob=" + dob +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", state='" + state + '\'' +
+                ", pincode=" + pincode +
+                ", records=" + records +
+                '}';
+    }
 }

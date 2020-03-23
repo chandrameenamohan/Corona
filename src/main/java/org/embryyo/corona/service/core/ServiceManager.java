@@ -1,5 +1,15 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.core;
 
+import org.embryyo.corona.service.dto.*;
+import org.embryyo.corona.service.exception.InvalidOTPException;
+import org.embryyo.corona.service.model.Otp;
+import org.embryyo.corona.service.model.Patient;
+import org.embryyo.corona.service.model.PatientSymptom;
+import org.embryyo.corona.service.model.Symptom;
+import org.embryyo.corona.service.repo.OtpRepository;
+import org.embryyo.corona.service.repo.PatientRepository;
+import org.embryyo.corona.service.repo.PatientSymptomRepository;
+import org.embryyo.corona.service.repo.SymptopRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,7 +33,7 @@ public class ServiceManager {
     private PatientSymptomRepository patientSymptomRepository;
 
     @Autowired
-    private PatientEnricher patientEnricher;
+    private Enricher enricher;
 
     public LoginResponse login(LoginRequest loginRequest) {
         /**
@@ -36,7 +46,7 @@ public class ServiceManager {
         if (patient == null) {
             return new LoginResponse(true);
         }
-        return new LoginResponse(patientEnricher.from(patient));
+        return new LoginResponse(enricher.fromPatientDO(patient));
     }
 
     private Patient verifyAndGet(LoginRequest loginRequest) {
@@ -57,7 +67,10 @@ public class ServiceManager {
     public void getOtp(String number) {
         // TODO: Send otp using SMS Service;
         String otp = generateOtp(number);
-        Otp otpObj = new Otp();
+        Otp otpObj = otpRepository.findByMobileNumber(number);
+        if (otpObj == null) {
+            otpObj = new Otp();
+        }
         otpObj.setMobileNumber(number);
         Timestamp timestamp = new Timestamp(Calendar
                 .getInstance().getTimeInMillis());
@@ -83,32 +96,46 @@ public class ServiceManager {
         return patientRepository.findById(id).get();
     }
 
-    public void addPatientSymptom(List<SymptomRecord> record, int patientId) {
+    public void addPatientSymptom(RecordDTO record, int patientId) {
         List<Symptom> symptoms = new ArrayList<>();
-        Map<String,SymptomRecord> symptomToRecord = new HashMap<>();
-        for (SymptomRecord sr : record) {
+        Map<String, PatientSymptomDTO> symptomToRecord = new HashMap<>();
+        for (PatientSymptomDTO patientSymptomDTO : record.getSymptoms()) {
             Symptom s = symptopRepository
-                    .findByName(sr.getSymptom());
+                    .findByName(patientSymptomDTO.getName());
             symptoms.add(s);
-            symptomToRecord.put(sr.getSymptom(),sr);
+            symptomToRecord.put(patientSymptomDTO.getName(), patientSymptomDTO);
         }
         List<PatientSymptom> patientSymptoms = new ArrayList<>();
         Patient p = patientRepository.findById(patientId).get();
+        final long recordSequence = System.nanoTime();
         for (Symptom s : symptoms) {
             PatientSymptom patientSymptom = new PatientSymptom();
             patientSymptom.setPatient(p);
             patientSymptom.setSymptom(s);
-            SymptomRecord sr = symptomToRecord.get(s.getName());
+            PatientSymptomDTO sr = symptomToRecord.get(s.getName());
             patientSymptom.setSeverity(sr.getSeverity());
-            patientSymptom.setNote(sr.getComment());
-            patientSymptom.setTime(new Timestamp(sr
-                    .getTime().getTime()));
+            patientSymptom.setNote(record.getNote());
+            patientSymptom.setTime(new Timestamp(record.getDate()));
+            patientSymptom.setRecordSequence(recordSequence);
             patientSymptoms.add(patientSymptom);
         }
-        for (PatientSymptom ps : patientSymptoms) patientSymptomRepository.save(ps);
+        patientSymptomRepository.saveAll(patientSymptoms);
     }
 
     public void addSymptom(Symptom s) {
         symptopRepository.save(s);
+    }
+
+    public List<SymptomDTO> getSymptoms() {
+        Iterator<Symptom> symptoms = symptopRepository.findAll().iterator();
+        List<SymptomDTO> symptomDTOS = new ArrayList<>();
+        while (symptoms.hasNext()) {
+            Symptom s = symptoms.next();
+            SymptomDTO symptomDTO = new SymptomDTO();
+            symptomDTO.setName(s.getName());
+            symptomDTO.setDisplayName(s.getDisplayName());
+            symptomDTOS.add(symptomDTO);
+        }
+        return symptomDTOS;
     }
 }

@@ -1,4 +1,4 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.dto;
 
 public class LoginRequest {
     private String number;

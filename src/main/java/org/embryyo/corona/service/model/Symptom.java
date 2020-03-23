@@ -1,6 +1,4 @@
-package org.embryyo.corona.service;
-
-import org.hibernate.validator.constraints.UniqueElements;
+package org.embryyo.corona.service.model;
 
 import javax.persistence.*;
 import java.util.Set;
@@ -13,6 +11,8 @@ public class Symptom {
 
     @Column(unique = true)
     private String name;
+
+    private String displayName;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "symptom")
     private Set<PatientSymptom> patientSymptoms;
@@ -39,5 +39,13 @@ public class Symptom {
 
     public void setPatientSymptoms(Set<PatientSymptom> patientSymptoms) {
         this.patientSymptoms = patientSymptoms;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 }

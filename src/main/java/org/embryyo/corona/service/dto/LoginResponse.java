@@ -1,4 +1,6 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.dto;
+
+import org.embryyo.corona.service.dto.PatientDTO;
 
 public class LoginResponse {
     private boolean isNewUser;

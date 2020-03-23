@@ -1,4 +1,4 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.model;
 
 import javax.persistence.*;
 import java.sql.Date;

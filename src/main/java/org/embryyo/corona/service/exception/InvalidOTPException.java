@@ -1,4 +1,4 @@
-package org.embryyo.corona.service;
+package org.embryyo.corona.service.exception;
 
 
 public class InvalidOTPException extends RuntimeException {
