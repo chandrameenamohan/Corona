@@ -1,14 +1,25 @@
 package org.embryyo.corona.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class ServiceManager {
 
     private Map<String,Patient> memDB = new HashMap<>();
+
+    @Autowired
+    private OtpRepository otpRepository;
+
+    @Autowired
+    private PatientRepository patientRepository;
 
     public LoginResponse login(LoginRequest loginRequest) {
         /**
@@ -25,16 +36,38 @@ public class ServiceManager {
     }
 
     private Patient verifyAndGet(LoginRequest loginRequest) {
-        return null;
+        Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
+        // TODO: Add otp expires logic
+        Patient p = patientRepository.findByMobileNumber(otpObj.getMobileNumber());
+        return p;
     }
 
-    public String getOtp(String number) {
+    private boolean isOtpExpires(Otp otpObj) {
+        return false;
+    }
+
+    public void getOtp(String number) {
         // TODO: Send otp using SMS Service;
+        String otp = generateOtp(number);
+        Otp otpObj = new Otp();
+        otpObj.setMobileNumber(number);
+        Timestamp timestamp = new Timestamp(Calendar
+                .getInstance().getTimeInMillis());
+        otpObj.setStoringTime(timestamp);
+        otpObj.setOtp(otp);
+        otpObj.setExpireTimeInSeconds(180);
+        otpRepository.save(otpObj);
+    }
+
+    private String generateOtp(String number) {
+        int randomNum = ThreadLocalRandom.current()
+                .nextInt(Constant.OTP_MIN, Constant.OTP_MAX + 1);
+        // TODO: send randomNum as otp through sms service
         return "000000";
     }
 
     public Patient register(Patient patient) {
-        memDB.put(patient.getGuid(),patient);
+        memDB.put("",patient);
         return patient;
     }
 

@@ -1,40 +1,35 @@
 package org.embryyo.corona.service;
 
+import javax.persistence.*;
+import java.sql.Date;
+import java.util.Set;
+
+@Entity
 public class Patient {
-    private String name;
-    private String guid;
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
+    private Set<PatientSymptoms> patientSymptoms;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
+    private Set<PatientFlow> patientFlows;
+
+    @Column(unique = true)
+    private String patientId; // this is to match with his global patient-code
+
+    private String firstName;
+    private String lastName;
+
+    @Column(unique = true)
+    private String mobileNumber;
+    private Date dob;
+    private int age;
     private String gender;
-    private String age;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
-    }
-
-    public String getAge() {
-        return age;
-    }
-
-    public void setAge(String age) {
-        this.age = age;
-    }
+    private String address;
+    private String city;
+    private String state;
+    private int pincode;
 }
