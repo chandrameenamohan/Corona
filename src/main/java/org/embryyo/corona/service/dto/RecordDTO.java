@@ -4,24 +4,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class RecordDTO {
-    private int id; // use the date to store it
-    private int date;
+    private long sequenceNo; // use the date to store it
+    private long date;
     private List<PatientSymptomDTO> symptoms;
     private String note;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public int getDate() {
+    public long getDate() {
         return date;
     }
 
-    public void setDate(int date) {
+    public void setDate(long date) {
         this.date = date;
     }
 
@@ -41,12 +33,20 @@ public class RecordDTO {
         this.note = note;
     }
 
+    public long getSequenceNo() {
+        return sequenceNo;
+    }
+
+    public void setSequenceNo(long sequenceNo) {
+        this.sequenceNo = sequenceNo;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         RecordDTO recordDTO = (RecordDTO) o;
-        return id == recordDTO.id &&
+        return sequenceNo == recordDTO.sequenceNo &&
                 date == recordDTO.date &&
                 Objects.equals(symptoms, recordDTO.symptoms) &&
                 Objects.equals(note, recordDTO.note);
@@ -54,13 +54,13 @@ public class RecordDTO {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, date, symptoms, note);
+        return Objects.hash(sequenceNo, date, symptoms, note);
     }
 
     @Override
     public String toString() {
         return "RecordDTO{" +
-                "id=" + id +
+                "sequenceNo=" + sequenceNo +
                 ", date=" + date +
                 ", symptoms=" + symptoms +
                 ", note='" + note + '\'' +

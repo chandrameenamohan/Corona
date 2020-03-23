@@ -4,14 +4,8 @@ import org.embryyo.corona.service.dto.*;
 import org.embryyo.corona.service.exception.AuthFailException;
 import org.embryyo.corona.service.exception.InvalidOTPException;
 import org.embryyo.corona.service.exception.NotFoundException;
-import org.embryyo.corona.service.model.Otp;
-import org.embryyo.corona.service.model.Patient;
-import org.embryyo.corona.service.model.PatientSymptom;
-import org.embryyo.corona.service.model.Symptom;
-import org.embryyo.corona.service.repo.OtpRepository;
-import org.embryyo.corona.service.repo.PatientRepository;
-import org.embryyo.corona.service.repo.PatientSymptomRepository;
-import org.embryyo.corona.service.repo.SymptopRepository;
+import org.embryyo.corona.service.model.*;
+import org.embryyo.corona.service.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,6 +27,9 @@ public class ServiceManager {
 
     @Autowired
     private PatientSymptomRepository patientSymptomRepository;
+
+    @Autowired
+    private HealthRecordRepository healthRecordRepository;
 
     @Autowired
     private Enricher enricher;
@@ -116,7 +113,28 @@ public class ServiceManager {
         return enricher.fromPatientDO(p);
     }
 
-    public void addPatientSymptom(RecordDTO record, int patientId) {
+    public void addPatientSymptom(RecordDTO record, int patientId, String token) {
+        Patient p = patientRepository.findById(patientId).get();
+        requestValidation(p.getMobileNumber(),token);
+
+        HealthRecord healthRecord = new HealthRecord();
+        healthRecord.setNote(record.getNote());
+        healthRecord.setTimestamp(new Timestamp(record.getDate()));
+        healthRecord.setRecordSequence(System.nanoTime());
+        healthRecord.setPatient(p);
+        healthRecordRepository.save(healthRecord);
+
+        List<PatientSymptomDTO> patientSymptoms = record.getSymptoms();
+        List<PatientSymptom> patientSymptomsDO = new ArrayList<>();
+        for (PatientSymptomDTO dto : patientSymptoms) {
+            PatientSymptom patientSymptom = new PatientSymptom();
+            patientSymptom.setHealthRecord(healthRecord);
+            patientSymptom.setSeverity(dto.getSeverity());
+            Symptom symptom = symptopRepository.findByName(dto.getName());
+            patientSymptom.setSymptom(symptom);
+            patientSymptomsDO.add(patientSymptom);
+        }
+        patientSymptomRepository.saveAll(patientSymptomsDO);
     }
 
     public void addSymptom(Symptom s) {
@@ -134,5 +152,40 @@ public class ServiceManager {
             symptomDTOS.add(symptomDTO);
         }
         return symptomDTOS;
+    }
+
+    public List<RecordDTO> getPatientSymptoms(int patientId, String token) {
+        Patient p = patientRepository.findById(patientId).get();
+        requestValidation(p.getMobileNumber(),token);
+
+        Set<HealthRecord> healthRecords = p.getHealthRecords();
+
+        if (healthRecords == null) {
+            return new ArrayList<>();
+        }
+
+        List<RecordDTO> recordDTOS = new ArrayList<>();
+        for (HealthRecord healthRecord : healthRecords) {
+            RecordDTO recordDTO = new RecordDTO();
+            recordDTO.setSequenceNo(healthRecord.getRecordSequence());
+            recordDTO.setDate(healthRecord.getTimestamp().getTime());
+            recordDTO.setNote(healthRecord.getNote());
+            recordDTOS.add(recordDTO);
+
+            Set<PatientSymptom> symptomSet = healthRecord.getPatientSymptoms();
+
+            if (symptomSet == null) continue;
+
+            List<PatientSymptomDTO> dtos = new ArrayList<>();
+            recordDTO.setSymptoms(dtos);
+
+            for (PatientSymptom ps : symptomSet) {
+                PatientSymptomDTO patientSymptomDTO = new PatientSymptomDTO();
+                patientSymptomDTO.setName(ps.getSymptom().getDisplayName());
+                patientSymptomDTO.setSeverity(ps.getSeverity());
+                dtos.add(patientSymptomDTO);
+            }
+        }
+        return recordDTOS;
     }
 }

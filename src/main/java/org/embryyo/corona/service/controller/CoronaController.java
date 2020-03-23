@@ -61,13 +61,20 @@ public class CoronaController {
     }
 
     @PostMapping("/patients/{id}/symptoms")
+    @ResponseStatus(HttpStatus.CREATED)
     public void addPatientSymptom(@RequestBody RecordDTO record,
-                           @PathVariable("id") int id) {
-        serviceManager.addPatientSymptom(record,id);
+                           @PathVariable("id") int id, HttpServletRequest request) {
+        serviceManager.addPatientSymptom(record,id,request.getHeader("token"));
+    }
+
+    @GetMapping("/patients/{id}/symptoms")
+    public List<RecordDTO> getPatientSymptom(@PathVariable("id") int id,
+                                             HttpServletRequest request) {
+        return serviceManager.getPatientSymptoms(id,request.getHeader("token"));
     }
 
     @PostMapping("/symptoms")
-    public void addSymproms(@RequestBody Symptom s) {
+    public void addSymptoms(@RequestBody Symptom s) {
         serviceManager.addSymptom(s);
     }
 
