@@ -34,30 +34,36 @@ public class ServiceManager {
     @Autowired
     private Enricher enricher;
 
-    public LoginResponse login(LoginRequest loginRequest, String token) {
+    public LoginResponse login(LoginRequest loginRequest) {
         /**
          * TODO: Add the logic of login
          * verify number and otp
          * if new user then send register request
          * else context
          */
-        Patient patient = verifyAndGet(loginRequest,token);
+        Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
+        Patient patient = verifyAndGet(otpObj,loginRequest);
         if (patient == null) {
-            return new LoginResponse(true);
+            return new LoginResponse(true,otpObj.getToken());
         }
-        return new LoginResponse(enricher.fromPatientDO(patient));
+        return new LoginResponse(enricher.fromPatientDO(patient), otpObj.getToken());
     }
 
-    private Patient verifyAndGet(LoginRequest loginRequest, String token) {
-        Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
-        if (!otpObj.getToken().equalsIgnoreCase(token)) {
-            throw new AuthFailException("authorization failed");
+    private Patient verifyAndGet(Otp otpObj, LoginRequest loginRequest) {
+        if (otpObj == null) {
+            if (otpObj == null) {
+                throw new NotFoundException(String
+                        .format("Patient is not registered with us: %s",
+                                loginRequest.getNumber()));
+            }
         }
         // TODO: Add otp expires logic
         if (!otpObj.getOtp().equals(loginRequest.getOtp())) {
             throw new InvalidOTPException(String
                     .format("Given OTP:%s has not matched",loginRequest.getOtp()));
         }
+        otpObj.setToken(UUID.randomUUID().toString());
+        otpRepository.save(otpObj);
         Patient p = patientRepository.findByMobileNumber(otpObj.getMobileNumber());
         return p;
     }
@@ -70,14 +76,14 @@ public class ServiceManager {
         Otp otpObj = otpRepository.findByMobileNumber(number);
         if (otpObj == null) {
             throw new NotFoundException(String
-                    .format("Patient is not registed yet for mobile: %s", number));
+                    .format("Patient is not registered for mobile: %s", number));
         }
         if (!otpObj.getToken().equalsIgnoreCase(token)) {
             throw new AuthFailException("authorization failed");
         }
     }
 
-    public String getOtp(String number) {
+    public void getOtp(String number) {
         // TODO: Send otp using SMS Service;
         String otp = generateOtp(number);
         Otp otpObj = otpRepository.findByMobileNumber(number);
@@ -90,9 +96,7 @@ public class ServiceManager {
         otpObj.setStoringTime(timestamp);
         otpObj.setOtp(otp);
         otpObj.setExpireTimeInSeconds(180);
-        otpObj.setToken(UUID.randomUUID().toString());
         otpRepository.save(otpObj);
-        return otpObj.getToken();
     }
 
     private String generateOtp(String number) {

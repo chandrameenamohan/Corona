@@ -26,17 +26,14 @@ public class CoronaController {
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public LoginResponse login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
-        String token = request.getHeader("token");
-        serviceManager.requestValidation(loginRequest.getNumber(),token);
-        LoginResponse loginResponse = serviceManager.login(loginRequest,token);
+        LoginResponse loginResponse = serviceManager.login(loginRequest);
         return loginResponse;
     }
 
     @GetMapping("/otp")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void sendOTP(@RequestParam("number") String number, HttpServletResponse response) {
-        String token = serviceManager.getOtp(number);
-        response.setHeader("token",token);
+        serviceManager.getOtp(number);
     }
 
     @PostMapping("/patients")

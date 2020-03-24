@@ -5,12 +5,13 @@ import org.embryyo.corona.service.dto.PatientDTO;
 public class LoginResponse {
     private boolean isNewUser;
     private PatientDTO patient;
+    private String authToken;
 
-    public LoginResponse(boolean isNewUser) {
+    public LoginResponse(boolean isNewUser, String authToken) {
         this.isNewUser = isNewUser;
     }
 
-    public LoginResponse(PatientDTO patient) {
+    public LoginResponse(PatientDTO patient, String authToken) {
         this.patient = patient;
     }
 
@@ -28,5 +29,9 @@ public class LoginResponse {
 
     public void setPatient(PatientDTO patient) {
         this.patient = patient;
+    }
+
+    public String getAuthToken() {
+        return authToken;
     }
 }
