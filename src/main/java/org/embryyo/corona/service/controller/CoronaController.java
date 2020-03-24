@@ -47,6 +47,18 @@ public class CoronaController {
                 .path("/patients/" + id).toUriString());
     }
 
+    @PostMapping("/patients/{id}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void editProfile(@RequestBody PatientDTO patient, @PathVariable("id") int id,
+                            HttpServletRequest request,
+                         HttpServletResponse response) {
+        String token = request.getHeader("token");
+        serviceManager.requestValidation(patient.getMobileNumber(),token);
+        serviceManager.editProfile(patient,id);
+        response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/patients/" + id).toUriString());
+    }
+
     @GetMapping("/patients/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PatientDTO getPatient(@PathVariable("id") int id, HttpServletRequest request) {

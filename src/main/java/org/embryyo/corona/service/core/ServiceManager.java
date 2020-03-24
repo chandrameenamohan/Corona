@@ -198,4 +198,10 @@ public class ServiceManager {
         }
         return recordDTOS;
     }
+
+    public void editProfile(PatientDTO patient, int id) {
+        Patient p = enricher.fromPatientDTO(patient);
+        p.setId(id);
+        patientRepository.save(p);
+    }
 }
