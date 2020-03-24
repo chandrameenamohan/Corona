@@ -9,10 +9,12 @@ public class LoginResponse {
 
     public LoginResponse(boolean isNewUser, String authToken) {
         this.isNewUser = isNewUser;
+        this.authToken = authToken;
     }
 
     public LoginResponse(PatientDTO patient, String authToken) {
         this.patient = patient;
+        this.authToken = authToken;
     }
 
     public boolean getIsNewUser() {
