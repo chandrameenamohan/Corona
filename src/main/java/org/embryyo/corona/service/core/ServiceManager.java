@@ -34,6 +34,9 @@ public class ServiceManager {
     @Autowired
     private Enricher enricher;
 
+    @Autowired
+    private SmsSender smsSender;
+
     public LoginResponse login(LoginRequest loginRequest) {
         /**
          * TODO: Add the logic of login
@@ -84,8 +87,9 @@ public class ServiceManager {
     }
 
     public void getOtp(String number) {
-        // TODO: Send otp using SMS Service;
         String otp = generateOtp(number);
+        String number91 = "+91" + number;
+        smsSender.send(otp,number91);
         Otp otpObj = otpRepository.findByMobileNumber(number);
         if (otpObj == null) {
             otpObj = new Otp();
@@ -102,8 +106,7 @@ public class ServiceManager {
     private String generateOtp(String number) {
         int randomNum = ThreadLocalRandom.current()
                 .nextInt(Constant.OTP_MIN, Constant.OTP_MAX + 1);
-        // TODO: send randomNum as otp through sms service
-        return "000000";
+        return Integer.toString(randomNum);
     }
 
     public int register(PatientDTO patient) {
