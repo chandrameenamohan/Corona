@@ -1,5 +1,6 @@
 package org.embryyo.corona.service.exception;
 
+import com.twilio.exception.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -26,6 +27,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NotFoundException.class)
     public ApiError handleNotFoundException(Exception ex) {
         ApiError error = new ApiError(HttpStatus.NOT_FOUND, ex.getMessage());
+        return error;
+    }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ApiException.class)
+    public ApiError handleApiException(Exception ex) {
+        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error from sms gateway service");
         return error;
     }
 }
