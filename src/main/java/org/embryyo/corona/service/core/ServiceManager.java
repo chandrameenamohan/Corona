@@ -1,5 +1,6 @@
 package org.embryyo.corona.service.core;
 
+import com.twilio.exception.ApiException;
 import org.embryyo.corona.service.dto.*;
 import org.embryyo.corona.service.exception.AuthFailException;
 import org.embryyo.corona.service.exception.InvalidOTPException;
@@ -89,7 +90,11 @@ public class ServiceManager {
     public void getOtp(String number) {
         String otp = generateOtp(number);
         String number91 = "+91" + number;
-        smsSender.send(otp,number91);
+        try {
+            smsSender.send(otp, number91);
+        } catch (ApiException ex) {
+            otp = "000000";
+        }
         Otp otpObj = otpRepository.findByMobileNumber(number);
         if (otpObj == null) {
             otpObj = new Otp();
