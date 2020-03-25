@@ -23,7 +23,7 @@ public class Enricher {
         // personal info
         patient.setFirstName(p.getFirstName());
         patient.setLastName(p.getLastName());
-        patient.setDob(p.getDob().getTime());
+        patient.setDob(p.getDob() == null ? 0 : p.getDob().getTime());
         patient.setGender(p.getGender());
         patient.setAge(p.getAge());
 

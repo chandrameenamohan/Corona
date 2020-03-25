@@ -7,9 +7,10 @@ public class LoginResponse {
     private PatientDTO patient;
     private String authToken;
 
-    public LoginResponse(boolean isNewUser, String authToken) {
+    public LoginResponse(boolean isNewUser, String authToken, PatientDTO patient) {
         this.isNewUser = isNewUser;
         this.authToken = authToken;
+        this.patient = patient;
     }
 
     public LoginResponse(PatientDTO patient, String authToken) {

@@ -52,7 +52,12 @@ public class ServiceManager {
         Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
         Patient patient = verifyAndGet(otpObj,loginRequest);
         if (patient == null) {
-            return new LoginResponse(true,otpObj.getToken());
+            patient = new Patient();
+            patient.setMobileNumber(loginRequest.getNumber());
+            patientRepository.save(patient);
+
+            return new LoginResponse(true,otpObj.getToken(),
+                    enricher.fromPatientDO(patient));
         }
         return new LoginResponse(enricher.fromPatientDO(patient), otpObj.getToken());
     }
