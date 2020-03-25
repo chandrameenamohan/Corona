@@ -8,6 +8,7 @@ import org.embryyo.corona.service.exception.NotFoundException;
 import org.embryyo.corona.service.model.*;
 import org.embryyo.corona.service.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -16,6 +17,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class ServiceManager {
+
+    @Value( "${app.twilio.enable}" )
+    private String isTwilioEnabled;
 
     @Autowired
     private OtpRepository otpRepository;
@@ -89,10 +93,14 @@ public class ServiceManager {
 
     public void getOtp(String number) {
         String otp = generateOtp(number);
-        String number91 = "+91" + number;
-        try {
-            smsSender.send(otp, number91);
-        } catch (ApiException ex) {
+        if ("true".equalsIgnoreCase(isTwilioEnabled)) {
+            String number91 = "+91" + number;
+            try {
+                smsSender.send(otp, number91);
+            } catch (ApiException ex) {
+                otp = "000000";
+            }
+        } else {
             otp = "000000";
         }
         Otp otpObj = otpRepository.findByMobileNumber(number);
