@@ -209,7 +209,7 @@ public class ServiceManager {
 
             for (PatientSymptom ps : symptomSet) {
                 PatientSymptomDTO patientSymptomDTO = new PatientSymptomDTO();
-                patientSymptomDTO.setName(ps.getSymptom().getDisplayName());
+                patientSymptomDTO.setName(ps.getSymptom().getName());
                 patientSymptomDTO.setSeverity(ps.getSeverity());
                 dtos.add(patientSymptomDTO);
             }
