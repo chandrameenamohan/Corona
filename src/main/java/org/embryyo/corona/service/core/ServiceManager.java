@@ -1,5 +1,6 @@
 package org.embryyo.corona.service.core;
 
+import com.twilio.exception.ApiException;
 import org.embryyo.corona.service.dto.*;
 import org.embryyo.corona.service.exception.AuthFailException;
 import org.embryyo.corona.service.exception.InvalidOTPException;
@@ -7,6 +8,7 @@ import org.embryyo.corona.service.exception.NotFoundException;
 import org.embryyo.corona.service.model.*;
 import org.embryyo.corona.service.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
@@ -15,6 +17,9 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Component
 public class ServiceManager {
+
+    @Value( "${app.twilio.enable}" )
+    private String isTwilioEnabled;
 
     @Autowired
     private OtpRepository otpRepository;
@@ -47,7 +52,12 @@ public class ServiceManager {
         Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
         Patient patient = verifyAndGet(otpObj,loginRequest);
         if (patient == null) {
-            return new LoginResponse(true,otpObj.getToken());
+            patient = new Patient();
+            patient.setMobileNumber(loginRequest.getNumber());
+            patientRepository.save(patient);
+
+            return new LoginResponse(true,otpObj.getToken(),
+                    enricher.fromPatientDO(patient));
         }
         return new LoginResponse(enricher.fromPatientDO(patient), otpObj.getToken());
     }
@@ -88,8 +98,16 @@ public class ServiceManager {
 
     public void getOtp(String number) {
         String otp = generateOtp(number);
-        String number91 = "+91" + number;
-        smsSender.send(otp,number91);
+        if ("true".equalsIgnoreCase(isTwilioEnabled)) {
+            String number91 = "+91" + number;
+            try {
+                smsSender.send(otp, number91);
+            } catch (ApiException ex) {
+                otp = "000000";
+            }
+        } else {
+            otp = "000000";
+        }
         Otp otpObj = otpRepository.findByMobileNumber(number);
         if (otpObj == null) {
             otpObj = new Otp();
@@ -191,11 +209,17 @@ public class ServiceManager {
 
             for (PatientSymptom ps : symptomSet) {
                 PatientSymptomDTO patientSymptomDTO = new PatientSymptomDTO();
-                patientSymptomDTO.setName(ps.getSymptom().getDisplayName());
+                patientSymptomDTO.setName(ps.getSymptom().getName());
                 patientSymptomDTO.setSeverity(ps.getSeverity());
                 dtos.add(patientSymptomDTO);
             }
         }
         return recordDTOS;
+    }
+
+    public void editProfile(PatientDTO patient, int id) {
+        Patient p = enricher.fromPatientDTO(patient);
+        p.setId(id);
+        patientRepository.save(p);
     }
 }

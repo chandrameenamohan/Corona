@@ -31,6 +31,8 @@ public class Patient {
     private int pincode;
 
     // Covid Related Data;
+    private String coMorbidities;
+    private String covidRiskFactors;
     private String covidState; // +ive, -ive
     private String moniorState; // suspected, confirmed, active, recovered, deceased
     private String transmissionType; // local, international
@@ -188,5 +190,21 @@ public class Patient {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public String getCoMorbidities() {
+        return coMorbidities;
+    }
+
+    public void setCoMorbidities(String coMorbidities) {
+        this.coMorbidities = coMorbidities;
+    }
+
+    public String getCovidRiskFactors() {
+        return covidRiskFactors;
+    }
+
+    public void setCovidRiskFactors(String covidRiskFactors) {
+        this.covidRiskFactors = covidRiskFactors;
     }
 }
