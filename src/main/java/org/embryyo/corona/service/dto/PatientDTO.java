@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Date;
+import java.util.List;
 
 public class PatientDTO {
     private int id;
@@ -22,6 +23,8 @@ public class PatientDTO {
     private int pincode;
 
     // Covid Related Data;
+    private List<String> coMorbidities;
+    private List<String> covidRiskFactors;
     private String patientId; //patient code
     private String covidState; // +ive, -ive
     private String moniorState; // suspected, confirmed, active, recovered, deceased
@@ -172,6 +175,22 @@ public class PatientDTO {
 
     public void setPincode(int pincode) {
         this.pincode = pincode;
+    }
+
+    public List<String> getCoMorbidities() {
+        return coMorbidities;
+    }
+
+    public void setCoMorbidities(List<String> coMorbidities) {
+        this.coMorbidities = coMorbidities;
+    }
+
+    public List<String> getCovidRiskFactors() {
+        return covidRiskFactors;
+    }
+
+    public void setCovidRiskFactors(List<String> covidRiskFactors) {
+        this.covidRiskFactors = covidRiskFactors;
     }
 
     @Override

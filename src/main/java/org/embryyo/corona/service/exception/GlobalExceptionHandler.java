@@ -37,4 +37,12 @@ public class GlobalExceptionHandler {
                 "Error from sms gateway service");
         return error;
     }
+
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(EnricherException.class)
+    public ApiError handleEnricherException(Exception ex) {
+        ApiError error = new ApiError(HttpStatus.INTERNAL_SERVER_ERROR,
+                "Error in parsing dto or do object");
+        return error;
+    }
 }
