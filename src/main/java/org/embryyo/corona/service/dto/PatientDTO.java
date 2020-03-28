@@ -23,6 +23,7 @@ public class PatientDTO {
     private int pincode;
 
     // Covid Related Data;
+    private String patientLocation; // patient current location: home/quarantine centre/hospital
     private List<String> coMorbidities;
     private List<String> covidRiskFactors;
     private String patientId; //patient code

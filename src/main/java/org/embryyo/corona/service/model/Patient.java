@@ -13,6 +13,13 @@ public class Patient {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
     private Set<HealthRecord> healthRecords;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
+
+    @ManyToMany(mappedBy = "patients", fetch = FetchType.LAZY)
+    Set<HealthWorker> healthWorkers;
+
     @Column(unique = true)
     private String patientId; // this is to match with his global patient-code
 
@@ -39,6 +46,9 @@ public class Patient {
     private String caseType; // mild, moderate, severe
     private String advice; // Home Quarantine, Admin and Test, call helpline, symptomatic management
     private boolean isHighRisk; // high-risk individuals
+
+    @Enumerated(EnumType.STRING)
+    private QuarantineType quarantineType;
 
     public Integer getId() {
         return id;
