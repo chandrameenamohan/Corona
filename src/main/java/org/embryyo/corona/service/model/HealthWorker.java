@@ -10,7 +10,8 @@ public class HealthWorker {
     private Integer id;
 
     private String name;
-    private String number;
+    private String mobile;
+    private String emailId;
 
     @Enumerated(EnumType.STRING)
     private HealthWorkerType workerType;
@@ -51,12 +52,20 @@ public class HealthWorker {
         this.name = name;
     }
 
-    public String getNumber() {
-        return number;
+    public String getMobile() {
+        return mobile;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getEmailId() {
+        return emailId;
+    }
+
+    public void setEmailId(String emailId) {
+        this.emailId = emailId;
     }
 
     public HealthWorkerType getWorkerType() {

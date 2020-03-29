@@ -3,11 +3,12 @@ package org.embryyo.corona.service.core;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.embryyo.corona.service.dto.HealthWorkerDTO;
+import org.embryyo.corona.service.dto.LocationDTO;
 import org.embryyo.corona.service.dto.PatientDTO;
 import org.embryyo.corona.service.dto.RecordDTO;
 import org.embryyo.corona.service.exception.EnricherException;
-import org.embryyo.corona.service.model.HealthRecord;
-import org.embryyo.corona.service.model.Patient;
+import org.embryyo.corona.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -116,5 +117,26 @@ public class Enricher {
     public HealthRecord fromRecordDTO(RecordDTO recordDTO) {
         HealthRecord healthRecord = new HealthRecord();
         return healthRecord;
+    }
+
+    public Location fromLocationDTO(LocationDTO locationDTO) {
+        return null;
+    }
+
+    public HealthWorker fromHealthWorkerDTO(HealthWorkerDTO healthWorkerDTO) {
+        HealthWorker healthWorker = new HealthWorker();
+        healthWorker.setName(healthWorkerDTO.getName());
+        HealthWorkerType workerType = whichRole(healthWorkerDTO.getRole());
+        healthWorker.setWorkerType(workerType);
+        healthWorker.setMobile(healthWorkerDTO.getMobile());
+        healthWorker.setEmailId(healthWorkerDTO.getEmailId());
+        return healthWorker;
+    }
+
+    private HealthWorkerType whichRole(String role) {
+        if (HealthWorkerType.DOCTOR.toString().equalsIgnoreCase(role)) {
+            return HealthWorkerType.DOCTOR;
+        }
+        return HealthWorkerType.UNKNOWN;
     }
 }

@@ -37,6 +37,12 @@ public class ServiceManager {
     private HealthRecordRepository healthRecordRepository;
 
     @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
+    private HealthWorkerRepository healthWorkerRepository;
+
+    @Autowired
     private Enricher enricher;
 
     @Autowired
@@ -221,5 +227,32 @@ public class ServiceManager {
         Patient p = enricher.fromPatientDTO(patient);
         p.setId(id);
         patientRepository.save(p);
+    }
+
+    public int addLocation(LocationDTO locationDTO) {
+        Location location = enricher.fromLocationDTO(locationDTO);
+        locationRepository.save(location);
+        return location.getId();
+    }
+
+    public int addHealthWorker(HealthWorkerDTO healthWorkerDTO) {
+        HealthWorker healthWorker = enricher.fromHealthWorkerDTO(healthWorkerDTO);
+        healthWorkerRepository.save(healthWorker);
+        return healthWorker.getId();
+    }
+
+    public void mapWorkerAndLocation(int workerId, int locationId) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        Location location = locationRepository.findById(locationId).get();
+        if (healthWorker.getWorkLocations() == null) {
+            healthWorker.setWorkLocations(new HashSet<>());
+        }
+        healthWorker.getWorkLocations().add(location);
+        if (location.getHealthWorkers() == null) {
+            location.setHealthWorkers(new HashSet<>());
+        }
+        location.getHealthWorkers().add(healthWorker);
+        healthWorkerRepository.save(healthWorker);
+        locationRepository.save(location);
     }
 }

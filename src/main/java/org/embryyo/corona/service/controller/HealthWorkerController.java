@@ -1,19 +1,33 @@
 package org.embryyo.corona.service.controller;
 
+import org.embryyo.corona.service.core.ServiceManager;
 import org.embryyo.corona.service.dto.HealthWorkerDTO;
 import org.embryyo.corona.service.dto.LocationDTO;
 import org.embryyo.corona.service.dto.PatientDTO;
 import org.embryyo.corona.service.model.HealthWorker;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @RestController
 public class HealthWorkerController {
 
-    @PostMapping(path = "/healthworkers")
-    public void addHealthWorker(@RequestBody HealthWorkerDTO healthWorkerDTO) {
+    @Autowired
+    private ServiceManager serviceManager;
 
+    @PostMapping(path = "/healthworkers")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addHealthWorker(@RequestBody HealthWorkerDTO healthWorkerDTO,
+                                HttpServletRequest request,
+                                HttpServletResponse response) {
+        int id = serviceManager.addHealthWorker(healthWorkerDTO);
+        response.setHeader("Location", ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/healthworkers/" + id).toUriString());
     }
 
     @GetMapping(path = "/healthworkers")
