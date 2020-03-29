@@ -34,4 +34,52 @@ public class HealthWorker {
             joinColumns = @JoinColumn(name = "health_worker_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "patient_id", referencedColumnName = "id"))
     Set<Patient> patients;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public HealthWorkerType getWorkerType() {
+        return workerType;
+    }
+
+    public void setWorkerType(HealthWorkerType workerType) {
+        this.workerType = workerType;
+    }
+
+    public Set<Location> getWorkLocations() {
+        return workLocations;
+    }
+
+    public void setWorkLocations(Set<Location> workLocations) {
+        this.workLocations = workLocations;
+    }
+
+    public Set<Patient> getPatients() {
+        return patients;
+    }
+
+    public void setPatients(Set<Patient> patients) {
+        this.patients = patients;
+    }
 }
