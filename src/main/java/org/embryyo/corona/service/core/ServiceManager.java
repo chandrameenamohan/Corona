@@ -255,4 +255,10 @@ public class ServiceManager {
         healthWorkerRepository.save(healthWorker);
         locationRepository.save(location);
     }
+
+    public HealthWorkerDTO getHealthWorker(int id) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(id).get();
+        HealthWorkerDTO healthWorkerDTO = enricher.fromHealthWorkerDO(healthWorker);
+        return healthWorkerDTO;
+    }
 }

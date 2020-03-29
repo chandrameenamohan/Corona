@@ -139,4 +139,14 @@ public class Enricher {
         }
         return HealthWorkerType.UNKNOWN;
     }
+
+    public HealthWorkerDTO fromHealthWorkerDO(HealthWorker healthWorker) {
+        HealthWorkerDTO healthWorkerDTO = new HealthWorkerDTO();
+        healthWorkerDTO.setEmailId(healthWorker.getEmailId());
+        healthWorkerDTO.setId(healthWorker.getId());
+        healthWorkerDTO.setMobile(healthWorker.getMobile());
+        healthWorkerDTO.setName(healthWorker.getName());
+        healthWorkerDTO.setRole(healthWorker.getWorkerType().toString());
+        return healthWorkerDTO;
+    }
 }

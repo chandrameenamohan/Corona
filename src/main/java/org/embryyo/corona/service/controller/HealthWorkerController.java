@@ -37,7 +37,8 @@ public class HealthWorkerController {
 
     @GetMapping(path = "/healthworkers/{id}")
     public HealthWorkerDTO addHealthWorker(@PathVariable int id) {
-        return null;
+        HealthWorkerDTO healthWorkerDTO = serviceManager.getHealthWorker(id);
+        return healthWorkerDTO;
     }
 
     @PutMapping(path = "/healthworkers/{workerId}/patients/{patientId}")
