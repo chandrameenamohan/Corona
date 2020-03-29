@@ -261,4 +261,10 @@ public class ServiceManager {
         HealthWorkerDTO healthWorkerDTO = enricher.fromHealthWorkerDO(healthWorker);
         return healthWorkerDTO;
     }
+
+    public LocationDTO getLocation(int id) {
+        Location location = locationRepository.findById(id).get();
+        LocationDTO locationDTO = enricher.fromLocationDO(location);
+        return locationDTO;
+    }
 }

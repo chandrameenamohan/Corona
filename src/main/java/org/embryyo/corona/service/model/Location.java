@@ -18,6 +18,7 @@ public class Location {
     private String town;
     private String state;
     private String country;
+    private String pincode;
 
     private String contactNumbers;
 
@@ -135,5 +136,13 @@ public class Location {
 
     public void setPatients(Set<Patient> patients) {
         this.patients = patients;
+    }
+
+    public String getPincode() {
+        return pincode;
+    }
+
+    public void setPincode(String pincode) {
+        this.pincode = pincode;
     }
 }
