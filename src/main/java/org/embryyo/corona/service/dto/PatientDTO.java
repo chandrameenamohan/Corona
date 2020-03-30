@@ -23,6 +23,9 @@ public class PatientDTO {
     private int pincode;
 
     // Covid Related Data;
+    private String quarantineType; // home, quarantine-centre
+    private long quarantineStartDate;
+    private long quarantineEndDate;
     private List<String> coMorbidities;
     private List<String> covidRiskFactors;
     private String patientId; //patient code
@@ -191,6 +194,30 @@ public class PatientDTO {
 
     public void setCovidRiskFactors(List<String> covidRiskFactors) {
         this.covidRiskFactors = covidRiskFactors;
+    }
+
+    public String getQuarantineType() {
+        return quarantineType;
+    }
+
+    public void setQuarantineType(String quarantineType) {
+        this.quarantineType = quarantineType;
+    }
+
+    public long getQuarantineStartDate() {
+        return quarantineStartDate;
+    }
+
+    public void setQuarantineStartDate(long quarantineStartDate) {
+        this.quarantineStartDate = quarantineStartDate;
+    }
+
+    public long getQuarantineEndDate() {
+        return quarantineEndDate;
+    }
+
+    public void setQuarantineEndDate(long quarantineEndDate) {
+        this.quarantineEndDate = quarantineEndDate;
     }
 
     @Override
