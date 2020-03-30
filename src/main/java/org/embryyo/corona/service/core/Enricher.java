@@ -45,7 +45,7 @@ public class Enricher {
 
         patient.setQuarantineStartDate(p.getQuarantineStartDate() == null ? 0 :
                 p.getQuarantineStartDate().getTime());
-        patient.setGetQuarantineEndDate(p.getQuarantineEndDate() == null ? 0 :
+        patient.setQuarantineEndDate(p.getQuarantineEndDate() == null ? 0 :
                 p.getQuarantineEndDate().getTime());
 
         // covid related data
@@ -109,7 +109,7 @@ public class Enricher {
         QuarantineType quarantineType = getQuarantineType(p.getQuarantineType());
         patient.setQuarantineType(quarantineType);
         patient.setQuarantineStartDate(new Timestamp(p.getQuarantineStartDate()));
-        patient.setQuarantineEndDate(new Timestamp(p.getGetQuarantineEndDate()));
+        patient.setQuarantineEndDate(new Timestamp(p.getQuarantineEndDate()));
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
