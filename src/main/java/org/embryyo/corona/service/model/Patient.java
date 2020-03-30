@@ -217,4 +217,28 @@ public class Patient {
     public void setCovidRiskFactors(String covidRiskFactors) {
         this.covidRiskFactors = covidRiskFactors;
     }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Set<HealthWorker> getHealthWorkers() {
+        return healthWorkers;
+    }
+
+    public void setHealthWorkers(Set<HealthWorker> healthWorkers) {
+        this.healthWorkers = healthWorkers;
+    }
+
+    public QuarantineType getQuarantineType() {
+        return quarantineType;
+    }
+
+    public void setQuarantineType(QuarantineType quarantineType) {
+        this.quarantineType = quarantineType;
+    }
 }

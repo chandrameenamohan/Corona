@@ -267,4 +267,19 @@ public class ServiceManager {
         LocationDTO locationDTO = enricher.fromLocationDO(location);
         return locationDTO;
     }
+
+    public void addPatientToHealthWorker(int workerId, int patientId) {
+        Patient p = patientRepository.findById(patientId).get();
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        if (healthWorker.getPatients() == null) {
+            healthWorker.setPatients(new HashSet<>());
+        }
+        healthWorker.getPatients().add(p);
+        if (p.getHealthWorkers() == null) {
+            p.setHealthWorkers(new HashSet<>());
+        }
+        p.getHealthWorkers().add(healthWorker);
+        patientRepository.save(p);
+        healthWorkerRepository.save(healthWorker);
+    }
 }

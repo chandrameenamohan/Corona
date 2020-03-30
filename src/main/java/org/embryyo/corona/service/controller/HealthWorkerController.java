@@ -43,22 +43,26 @@ public class HealthWorkerController {
 
     @PutMapping(path = "/healthworkers/{workerId}/patients/{patientId}")
     public void assignPatientToHealthWorker(@PathVariable(name = "workerId") int workerId,
-                                            @PathVariable(name = "patientId") int patientId) {
-
+                                            @PathVariable(name = "patientId") int patientId,
+                                            HttpServletRequest request,
+                                            HttpServletResponse response) {
+        serviceManager.addPatientToHealthWorker(workerId,patientId);
     }
 
     @PutMapping(path = "/healthworkers/{workerId}/locations/{locationId}")
     public void assignHealthWorkerToLocation(@PathVariable(name = "workerId") int workerId,
-                                             @PathVariable(name = "locationId") int patientId) {
-
+                                             @PathVariable(name = "locationId") int patientId,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) {
+        serviceManager.mapWorkerAndLocation(workerId,patientId);
     }
 
-    @PutMapping(path = "/healthworkers/{workerId}/patients")
+    @GetMapping(path = "/healthworkers/{workerId}/patients")
     public List<PatientDTO> getHealthWorkerPatients(@PathVariable(name = "workerId") int workerId) {
         return null;
     }
 
-    @PutMapping(path = "/healthworkers/{workerId}/locations")
+    @GetMapping(path = "/healthworkers/{workerId}/locations")
     public List<LocationDTO> getHealthWorkerLocations(@PathVariable(name = "workerId") int workerId) {
         return null;
     }
