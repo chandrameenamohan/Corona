@@ -3,21 +3,19 @@ package org.embryyo.corona.service.core;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.embryyo.corona.service.dto.HealthWorkerDTO;
+import org.embryyo.corona.service.dto.LocationDTO;
 import org.embryyo.corona.service.dto.PatientDTO;
 import org.embryyo.corona.service.dto.RecordDTO;
 import org.embryyo.corona.service.exception.EnricherException;
-import org.embryyo.corona.service.model.HealthRecord;
-import org.embryyo.corona.service.model.Patient;
-import org.embryyo.corona.service.model.QuarantineType;
+import org.embryyo.corona.service.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Component
 public class Enricher {
@@ -139,5 +137,105 @@ public class Enricher {
     public HealthRecord fromRecordDTO(RecordDTO recordDTO) {
         HealthRecord healthRecord = new HealthRecord();
         return healthRecord;
+    }
+
+    public Location fromLocationDTO(LocationDTO locationDTO) {
+        Location location = new Location();
+        location.setName(locationDTO.getName());
+        location.setAddress(locationDTO.getAddress());
+        location.setCity(locationDTO.getCity());
+        location.setCountry(locationDTO.getCountry());
+        location.setLatitute(locationDTO.getLatitude());
+        location.setLongitude(locationDTO.getLongitude());
+        location.setPincode(locationDTO.getPincode());
+        location.setState(locationDTO.getState());
+        location.setTown(locationDTO.getTown());
+        LocationType locationType = getLocationType(locationDTO);
+        String contactNumbers = getContactNumber(locationDTO);
+        location.setQuarantineType(locationType);
+        location.setContactNumbers(contactNumbers);
+        return location;
+    }
+
+    private String getContactNumber(LocationDTO locationDTO) {
+        String contacts = null;
+        try {
+            Map<String,String> contactNumbers = locationDTO.getContactNumbers();
+            if (contactNumbers == null || contactNumbers.isEmpty()) return contacts;
+            ObjectMapper objectMapper = new ObjectMapper();
+            contacts = objectMapper.writeValueAsString(contactNumbers);
+        } catch (JsonProcessingException e) {
+            throw new EnricherException("Failed to parse contactMap data from db to dto");
+        }
+        return contacts;
+    }
+
+    private LocationType getLocationType(LocationDTO locationDTO) {
+        if (LocationType.HOSPITAL.toString().equalsIgnoreCase(locationDTO.getLocationType())) {
+            return LocationType.HOSPITAL;
+        } else if (LocationType.HOSTEL.toString().equalsIgnoreCase(locationDTO.getLocationType())) {
+            return LocationType.HOSTEL;
+        }
+        return LocationType.UNKNOWN;
+    }
+
+    public HealthWorker fromHealthWorkerDTO(HealthWorkerDTO healthWorkerDTO) {
+        HealthWorker healthWorker = new HealthWorker();
+        healthWorker.setName(healthWorkerDTO.getName());
+        HealthWorkerType workerType = whichRole(healthWorkerDTO.getRole());
+        healthWorker.setWorkerType(workerType);
+        healthWorker.setMobile(healthWorkerDTO.getMobile());
+        healthWorker.setEmailId(healthWorkerDTO.getEmailId());
+        return healthWorker;
+    }
+
+    private HealthWorkerType whichRole(String role) {
+        if (HealthWorkerType.DOCTOR.toString().equalsIgnoreCase(role)) {
+            return HealthWorkerType.DOCTOR;
+        }
+        return HealthWorkerType.UNKNOWN;
+    }
+
+    public HealthWorkerDTO fromHealthWorkerDO(HealthWorker healthWorker) {
+        HealthWorkerDTO healthWorkerDTO = new HealthWorkerDTO();
+        healthWorkerDTO.setEmailId(healthWorker.getEmailId());
+        healthWorkerDTO.setId(healthWorker.getId());
+        healthWorkerDTO.setMobile(healthWorker.getMobile());
+        healthWorkerDTO.setName(healthWorker.getName());
+        healthWorkerDTO.setRole(healthWorker.getWorkerType().toString());
+        return healthWorkerDTO;
+    }
+
+    public LocationDTO fromLocationDO(Location location) {
+        LocationDTO locationDTO = new LocationDTO();
+        locationDTO.setAddress(location.getAddress());
+        locationDTO.setCity(location.getCity());
+        locationDTO.setCountry(location.getCountry());
+        locationDTO.setId(location.getId());
+        locationDTO.setLongitude(location.getLongitude());
+        locationDTO.setLatitude(location.getLatitute());
+        locationDTO.setLocationType(location.getQuarantineType().toString());
+        locationDTO.setPincode(location.getPincode());
+        locationDTO.setState(location.getState());
+        locationDTO.setName(location.getName());
+        locationDTO.setTown(location.getTown());
+        Map<String, String> contactMap = getContactMap(location);
+        locationDTO.setContactNumbers(contactMap);
+        return locationDTO;
+    }
+
+    private Map<String, String> getContactMap(Location location) {
+        String contacts = location.getContactNumbers();
+        Map<String, String> contactMap = new HashMap<>();
+        if (contacts == null || contacts.isEmpty()) return contactMap;
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            contactMap = objectMapper.readValue(contacts,
+                    new TypeReference<Map<String,String>>() {
+            });
+        } catch (IOException e) {
+            throw new EnricherException("Failed to parse contactMap data from db to dto");
+        }
+        return contactMap;
     }
 }

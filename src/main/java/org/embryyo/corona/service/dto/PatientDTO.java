@@ -24,6 +24,7 @@ public class PatientDTO {
 
     // Covid Related Data;
     private String quarantineType; // home, quarantine-centre
+    private String patientLocation; // patient current location: home/quarantine centre/hospital
     private long quarantineStartDate;
     private long quarantineEndDate;
     private List<String> coMorbidities;
