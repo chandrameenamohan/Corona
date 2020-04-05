@@ -38,6 +38,14 @@ public class Enricher {
         patient.setPincode(p.getPincode());
         patient.setState(p.getState());
 
+        String type = p.getQuarantineType() == null ? null : p.getQuarantineType().toString();
+        patient.setQuarantineType(type);
+
+        patient.setQuarantineStartDate(p.getQuarantineStartDate() == null ? 0 :
+                p.getQuarantineStartDate().getTime());
+        patient.setQuarantineEndDate(p.getQuarantineEndDate() == null ? 0 :
+                p.getQuarantineEndDate().getTime());
+
         // covid related data
         patient.setAdvice(p.getAdvice());
         patient.setCaseType(p.getCaseType());
@@ -96,6 +104,11 @@ public class Enricher {
         patient.setPatientId(p.getPatientId());
         patient.setTransmissionType(p.getTransmissionType());
 
+        QuarantineType quarantineType = getQuarantineType(p.getQuarantineType());
+        patient.setQuarantineType(quarantineType);
+        patient.setQuarantineStartDate(new Timestamp(p.getQuarantineStartDate()));
+        patient.setQuarantineEndDate(new Timestamp(p.getQuarantineEndDate()));
+
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             if (p.getCoMorbidities() != null) {
@@ -110,6 +123,15 @@ public class Enricher {
             throw new EnricherException("Cannot parse morbidities/riskfactors from DTO to DO");
         }
         return patient;
+    }
+
+    private QuarantineType getQuarantineType(String quarantineType) {
+        if (QuarantineType.HOME.toString().equalsIgnoreCase(quarantineType)) {
+            return QuarantineType.HOME;
+        } else if (QuarantineType.CENTRE.toString().equalsIgnoreCase(quarantineType)) {
+            return QuarantineType.CENTRE;
+        }
+        return QuarantineType.UNKNOWN;
     }
 
     public HealthRecord fromRecordDTO(RecordDTO recordDTO) {

@@ -2,6 +2,7 @@ package org.embryyo.corona.service.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -48,7 +49,11 @@ public class Patient {
     private boolean isHighRisk; // high-risk individuals
 
     @Enumerated(EnumType.STRING)
-    private QuarantineType quarantineType;
+    private QuarantineType quarantineType; // home, quarantine-centre
+  
+    private Timestamp quarantineStartDate;
+    private Timestamp quarantineEndDate;
+
 
     public Integer getId() {
         return id;
@@ -218,6 +223,30 @@ public class Patient {
         this.covidRiskFactors = covidRiskFactors;
     }
 
+    public QuarantineType getQuarantineType() {
+        return quarantineType;
+    }
+
+    public void setQuarantineType(QuarantineType quarantineType) {
+        this.quarantineType = quarantineType;
+    }
+
+    public Timestamp getQuarantineStartDate() {
+        return quarantineStartDate;
+    }
+
+    public void setQuarantineStartDate(Timestamp quarantineStartDate) {
+        this.quarantineStartDate = quarantineStartDate;
+    }
+
+    public Timestamp getQuarantineEndDate() {
+        return quarantineEndDate;
+    }
+
+    public void setQuarantineEndDate(Timestamp quarantineEndDate) {
+        this.quarantineEndDate = quarantineEndDate;
+    }
+  
     public Location getLocation() {
         return location;
     }
