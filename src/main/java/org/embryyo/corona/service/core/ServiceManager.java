@@ -225,6 +225,11 @@ public class ServiceManager {
 
     public void editProfile(PatientDTO patient, int id) {
         Patient p = enricher.fromPatientDTO(patient);
+        int locationId = patient.getLocationId();
+        if (locationId > 0) {
+            Location location = locationRepository.findById(locationId).get();
+            p.setLocation(location);
+        }
         p.setId(id);
         patientRepository.save(p);
     }

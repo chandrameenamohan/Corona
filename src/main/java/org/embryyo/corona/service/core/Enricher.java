@@ -76,6 +76,10 @@ public class Enricher {
         } catch (IOException e) {
             throw new EnricherException("Cannot parse morbidities/riskfactors from DO to DTO");
         }
+        Location location = p.getLocation();
+        if (location != null) {
+            patient.setLocationId(location.getId());
+        }
         return patient;
     }
 

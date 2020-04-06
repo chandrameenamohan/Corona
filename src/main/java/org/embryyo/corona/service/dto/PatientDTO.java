@@ -25,6 +25,7 @@ public class PatientDTO {
     // Covid Related Data;
     private String quarantineType; // home, quarantine-centre
     private String patientLocation; // patient current location: home/quarantine centre/hospital
+    private int locationId;
     private long quarantineStartDate;
     private long quarantineEndDate;
     private List<String> coMorbidities;
@@ -219,6 +220,14 @@ public class PatientDTO {
 
     public void setQuarantineEndDate(long quarantineEndDate) {
         this.quarantineEndDate = quarantineEndDate;
+    }
+
+    public int getLocationId() {
+        return locationId;
+    }
+
+    public void setLocationId(int locationId) {
+        this.locationId = locationId;
     }
 
     @Override
