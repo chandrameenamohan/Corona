@@ -5,6 +5,7 @@ import org.embryyo.corona.service.dto.PatientDTO;
 public class LoginResponse {
     private boolean isNewUser;
     private PatientDTO patient;
+    private HealthWorkerDTO healthWorkerDTO;
     private String authToken;
 
     public LoginResponse(boolean isNewUser, String authToken, PatientDTO patient) {
@@ -15,6 +16,11 @@ public class LoginResponse {
 
     public LoginResponse(PatientDTO patient, String authToken) {
         this.patient = patient;
+        this.authToken = authToken;
+    }
+
+    public LoginResponse(HealthWorkerDTO healthWorkerDTO, String authToken) {
+        this.healthWorkerDTO = healthWorkerDTO;
         this.authToken = authToken;
     }
 
@@ -36,5 +42,13 @@ public class LoginResponse {
 
     public String getAuthToken() {
         return authToken;
+    }
+
+    public HealthWorkerDTO getHealthWorkerDTO() {
+        return healthWorkerDTO;
+    }
+
+    public void setHealthWorkerDTO(HealthWorkerDTO healthWorkerDTO) {
+        this.healthWorkerDTO = healthWorkerDTO;
     }
 }

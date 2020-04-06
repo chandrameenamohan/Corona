@@ -3,8 +3,6 @@ package org.embryyo.corona.service.controller;
 import org.embryyo.corona.service.core.Enricher;
 import org.embryyo.corona.service.core.ServiceManager;
 import org.embryyo.corona.service.dto.*;
-import org.embryyo.corona.service.model.Patient;
-import org.embryyo.corona.service.model.Symptom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +30,9 @@ public class CoronaController {
 
     @GetMapping("/otp")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public void sendOTP(@RequestParam("number") String number, HttpServletResponse response) {
-        serviceManager.getOtp(number);
+    public void sendOTP(@RequestParam("number") String number, @RequestParam("role") String role,
+                        HttpServletResponse response) {
+        serviceManager.getOtp(number, role);
     }
 
     @PostMapping("/patients")

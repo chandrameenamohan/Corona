@@ -55,6 +55,9 @@ public class ServiceManager {
          * if new user then send register request
          * else context
          */
+        if (!loginRequest.getRole().equalsIgnoreCase("Patient")) {
+            return healthWorkerLogin(loginRequest);
+        }
         Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
         Patient patient = verifyAndGet(otpObj,loginRequest);
         if (patient == null) {
@@ -66,6 +69,33 @@ public class ServiceManager {
                     enricher.fromPatientDO(patient));
         }
         return new LoginResponse(enricher.fromPatientDO(patient), otpObj.getToken());
+    }
+
+    private LoginResponse healthWorkerLogin(LoginRequest loginRequest) {
+        Otp otpObj = otpRepository.findByMobileNumber(loginRequest.getNumber());
+        if (otpObj == null) {
+            if (otpObj == null) {
+                throw new NotFoundException(String
+                        .format("Patient is not registered with us: %s",
+                                loginRequest.getNumber()));
+            }
+        }
+        // TODO: Add otp expires logic
+        if (!otpObj.getOtp().equals(loginRequest.getOtp())) {
+            throw new InvalidOTPException(String
+                    .format("Given OTP:%s has not matched",loginRequest.getOtp()));
+        }
+        otpObj.setToken(UUID.randomUUID().toString());
+        otpRepository.save(otpObj);
+        HealthWorker healthWorker = healthWorkerRepository
+                .findByMobile(loginRequest.getNumber());
+        if (healthWorker == null) {
+            throw new NotFoundException(String
+                    .format("HealthWorkre is not registered with us: %s",
+                            loginRequest.getNumber()));
+        }
+        return new LoginResponse(enricher.fromHealthWorkerDO(healthWorker),
+                otpObj.getToken());
     }
 
     private Patient verifyAndGet(Otp otpObj, LoginRequest loginRequest) {
@@ -102,7 +132,41 @@ public class ServiceManager {
         }
     }
 
-    public void getOtp(String number) {
+    public void getOtp(String number, String role) {
+        if (!role.equalsIgnoreCase("Patient")) {
+            getOtpForHealthWorker(number);
+            return;
+        }
+        String otp = generateOtp(number);
+        if ("true".equalsIgnoreCase(isTwilioEnabled)) {
+            String number91 = "+91" + number;
+            try {
+                smsSender.send(otp, number91);
+            } catch (ApiException ex) {
+                otp = "000000";
+            }
+        } else {
+            otp = "000000";
+        }
+        Otp otpObj = otpRepository.findByMobileNumber(number);
+        if (otpObj == null) {
+            otpObj = new Otp();
+        }
+        otpObj.setMobileNumber(number);
+        Timestamp timestamp = new Timestamp(Calendar
+                .getInstance().getTimeInMillis());
+        otpObj.setStoringTime(timestamp);
+        otpObj.setOtp(otp);
+        otpObj.setExpireTimeInSeconds(180);
+        otpRepository.save(otpObj);
+    }
+
+    private void getOtpForHealthWorker(String number) {
+        HealthWorker healthWorker = healthWorkerRepository
+                .findByMobile(number);
+        if (healthWorker == null) {
+            throw new NotFoundException("Not found any entry for mobile: " + number);
+        }
         String otp = generateOtp(number);
         if ("true".equalsIgnoreCase(isTwilioEnabled)) {
             String number91 = "+91" + number;
