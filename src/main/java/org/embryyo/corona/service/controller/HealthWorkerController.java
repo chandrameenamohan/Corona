@@ -57,6 +57,14 @@ public class HealthWorkerController {
         serviceManager.mapWorkerAndLocation(workerId,patientId);
     }
 
+    @PutMapping(path = "/healthworkers/{workerId}/locations")
+    public void assignHealthWorkerToLocations(@PathVariable(name = "workerId") int workerId,
+                                             @RequestBody List<Integer> ids,
+                                             HttpServletRequest request,
+                                             HttpServletResponse response) {
+        serviceManager.mapWorkerAndLocations(workerId,ids);
+    }
+
     @GetMapping(path = "/healthworkers/{workerId}/patients")
     public List<PatientDTO> getHealthWorkerPatients(@PathVariable(name = "workerId")
                                                                 int workerId) {

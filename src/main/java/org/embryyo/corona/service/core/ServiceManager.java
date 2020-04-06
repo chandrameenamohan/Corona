@@ -350,4 +350,10 @@ public class ServiceManager {
         }
         return locationDTOS;
     }
+
+    public void mapWorkerAndLocations(int workerId, List<Integer> ids) {
+        for (int locationId : ids) {
+            mapWorkerAndLocation(workerId,locationId);
+        }
+    }
 }
