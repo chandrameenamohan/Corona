@@ -282,4 +282,61 @@ public class ServiceManager {
         patientRepository.save(p);
         healthWorkerRepository.save(healthWorker);
     }
+
+    public List<PatientDTO> getHealthWorkerPatients(int workerId) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        Set<Location> locations = healthWorker.getWorkLocations();
+        List<PatientDTO> patientDTOS = new ArrayList<>();
+        for (Location location : locations) {
+            Set<Patient> patients = location.getPatients();
+            for (Patient p : patients) {
+                patientDTOS.add(enricher.fromPatientDO(p));
+            }
+        }
+        return patientDTOS;
+    }
+
+    public List<LocationDTO> getHealthWorkerLocations(int workerId) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        Set<Location> locations = healthWorker.getWorkLocations();
+        List<LocationDTO> locationDTOS = new ArrayList<>();
+        for (Location location : locations) {
+            locationDTOS.add(enricher.fromLocationDO(location));
+        }
+        return locationDTOS;
+    }
+
+    public void mapPatientAndLocation(int locationId, int patientId) {
+        Location location = locationRepository.findById(locationId).get();
+        Patient patient = patientRepository.findById(patientId).get();
+        Set<Patient> patients = location.getPatients();
+        if (patients == null) {
+            patients = new HashSet<>();
+            location.setPatients(patients);
+        }
+        patient.setLocation(location);
+        patients.add(patient);
+        locationRepository.save(location);
+        patientRepository.save(patient);
+    }
+
+    public List<PatientDTO> getAllPatientsOfLocation(int locationId) {
+        Location location = locationRepository.findById(locationId).get();
+        List<PatientDTO> patientDTOS = new ArrayList<>();
+        Set<Patient> patients = location.getPatients();
+        for (Patient p : patients) {
+            patientDTOS.add(enricher.fromPatientDO(p));
+        }
+        return patientDTOS;
+    }
+
+    public List<HealthWorkerDTO> getHealthWorkersOfLocation(int locationId) {
+        Location location = locationRepository.findById(locationId).get();
+        List<HealthWorkerDTO> healthWorkerDTOS = new ArrayList<>();
+        Set<HealthWorker> healthWorkers = location.getHealthWorkers();
+        for (HealthWorker healthWorker : healthWorkers) {
+            healthWorkerDTOS.add(enricher.fromHealthWorkerDO(healthWorker));
+        }
+        return healthWorkerDTOS;
+    }
 }

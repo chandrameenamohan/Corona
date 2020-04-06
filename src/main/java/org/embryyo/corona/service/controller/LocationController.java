@@ -39,9 +39,9 @@ public class LocationController {
     }
 
     @PutMapping(path = "/locations/{locationId}/patients/{patientId}")
-    public PatientDTO assignPatientToLocation(@PathVariable(name = "locationId") int workerId,
+    public void assignPatientToLocation(@PathVariable(name = "locationId") int locationId,
                                                     @PathVariable(name = "patientId") int patientId) {
-        return null;
+        serviceManager.mapPatientAndLocation(locationId,patientId);
     }
 
     @GetMapping(path = "/locations/{locationId}/patients/{patientId}")
@@ -51,12 +51,15 @@ public class LocationController {
     }
 
     @GetMapping(path = "/locations/{locationId}/patients")
-    public List<PatientDTO> getAllPatientsOfLocation(@PathVariable(name = "locationId") int workerId) {
-        return null;
+    public List<PatientDTO> getAllPatientsOfLocation(@PathVariable(name = "locationId") int locationId) {
+        List<PatientDTO> patientDTOS = serviceManager.getAllPatientsOfLocation(locationId);
+        return patientDTOS;
     }
 
     @GetMapping(path = "/locations/{locationId}/healthworkers")
-    public List<HealthWorkerDTO> getAllHealthWorkersOfLocation(@PathVariable(name = "locationId") int workerId) {
-        return null;
+    public List<HealthWorkerDTO> getAllHealthWorkersOfLocation(@PathVariable(name = "locationId")
+                                                                           int locationId) {
+        List<HealthWorkerDTO> healthWorkerDTOS = serviceManager.getHealthWorkersOfLocation(locationId);
+        return healthWorkerDTOS;
     }
 }

@@ -192,6 +192,8 @@ public class Enricher {
     private HealthWorkerType whichRole(String role) {
         if (HealthWorkerType.DOCTOR.toString().equalsIgnoreCase(role)) {
             return HealthWorkerType.DOCTOR;
+        } else if (HealthWorkerType.NURSE.toString().equalsIgnoreCase(role)) {
+            return HealthWorkerType.NURSE;
         }
         return HealthWorkerType.UNKNOWN;
     }

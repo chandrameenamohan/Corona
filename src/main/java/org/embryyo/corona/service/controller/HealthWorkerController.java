@@ -58,12 +58,15 @@ public class HealthWorkerController {
     }
 
     @GetMapping(path = "/healthworkers/{workerId}/patients")
-    public List<PatientDTO> getHealthWorkerPatients(@PathVariable(name = "workerId") int workerId) {
-        return null;
+    public List<PatientDTO> getHealthWorkerPatients(@PathVariable(name = "workerId")
+                                                                int workerId) {
+        List<PatientDTO> patients = serviceManager.getHealthWorkerPatients(workerId);
+        return patients;
     }
 
     @GetMapping(path = "/healthworkers/{workerId}/locations")
     public List<LocationDTO> getHealthWorkerLocations(@PathVariable(name = "workerId") int workerId) {
-        return null;
+        List<LocationDTO> locations = serviceManager.getHealthWorkerLocations(workerId);
+        return locations;
     }
 }

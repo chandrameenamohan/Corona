@@ -14,8 +14,9 @@ public class Patient {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
     private Set<HealthRecord> healthRecords;
 
+    // Patient location can be null; If he is staying at his home address;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "location_id", nullable = false)
+    @JoinColumn(name = "location_id")
     private Location location;
 
     @ManyToMany(mappedBy = "patients", fetch = FetchType.LAZY)
@@ -261,13 +262,5 @@ public class Patient {
 
     public void setHealthWorkers(Set<HealthWorker> healthWorkers) {
         this.healthWorkers = healthWorkers;
-    }
-
-    public QuarantineType getQuarantineType() {
-        return quarantineType;
-    }
-
-    public void setQuarantineType(QuarantineType quarantineType) {
-        this.quarantineType = quarantineType;
     }
 }
