@@ -339,4 +339,15 @@ public class ServiceManager {
         }
         return healthWorkerDTOS;
     }
+
+    public List<LocationDTO> getAllLocations() {
+        List<LocationDTO> locationDTOS = new ArrayList<>();
+        Iterator<Location> iterator = locationRepository.findAll().iterator();
+        while (iterator.hasNext()) {
+            Location location = iterator.next();
+            LocationDTO locationDTO = enricher.fromLocationDO(location);
+            locationDTOS.add(locationDTO);
+        }
+        return locationDTOS;
+    }
 }

@@ -35,7 +35,8 @@ public class LocationController {
 
     @GetMapping(path = "/locations")
     public List<LocationDTO> getAllLocations() {
-        return null;
+        List<LocationDTO> locationDTOS = serviceManager.getAllLocations();
+        return locationDTOS;
     }
 
     @PutMapping(path = "/locations/{locationId}/patients/{patientId}")
