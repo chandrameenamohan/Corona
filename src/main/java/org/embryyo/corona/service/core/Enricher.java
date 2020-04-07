@@ -20,13 +20,17 @@ import java.util.*;
 @Component
 public class Enricher {
 
+    @Autowired
+    private DataCipherManager cipherManager;
+
     public PatientDTO fromPatientDO(Patient p) {
         PatientDTO patient = new PatientDTO();
         patient.setId(p.getId());
 
         // personal info
-        patient.setFirstName(p.getFirstName());
-        patient.setLastName(p.getLastName());
+        String decryptedFirstName = cipherManager.decrypt(p.getFirstName());
+        patient.setFirstName(decryptedFirstName);
+        patient.setLastName(cipherManager.decrypt(p.getLastName()));
         patient.setDob(p.getDob() == null ? 0 : p.getDob().getTime());
         patient.setGender(p.getGender());
         patient.setAge(p.getAge());
@@ -87,8 +91,9 @@ public class Enricher {
         Patient patient = new Patient();
         // personal info
         patient.setDob(new Date(p.getDob()));
-        patient.setFirstName(p.getFirstName());
-        patient.setLastName(p.getLastName());
+        String encryptedFirstName = cipherManager.encrypt(p.getFirstName());
+        patient.setFirstName(encryptedFirstName);
+        patient.setLastName(cipherManager.encrypt(p.getLastName()));
         patient.setGender(p.getGender());
         patient.setAge(p.getAge());
 
@@ -185,7 +190,7 @@ public class Enricher {
 
     public HealthWorker fromHealthWorkerDTO(HealthWorkerDTO healthWorkerDTO) {
         HealthWorker healthWorker = new HealthWorker();
-        healthWorker.setName(healthWorkerDTO.getName());
+        healthWorker.setName(cipherManager.encrypt(healthWorkerDTO.getName()));
         HealthWorkerType workerType = whichRole(healthWorkerDTO.getRole());
         healthWorker.setWorkerType(workerType);
         healthWorker.setMobile(healthWorkerDTO.getMobile());
@@ -207,7 +212,7 @@ public class Enricher {
         healthWorkerDTO.setEmailId(healthWorker.getEmailId());
         healthWorkerDTO.setId(healthWorker.getId());
         healthWorkerDTO.setMobile(healthWorker.getMobile());
-        healthWorkerDTO.setName(healthWorker.getName());
+        healthWorkerDTO.setName(cipherManager.decrypt(healthWorker.getName()));
         healthWorkerDTO.setRole(healthWorker.getWorkerType().toString());
         return healthWorkerDTO;
     }
