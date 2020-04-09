@@ -48,6 +48,9 @@ public class ServiceManager {
     @Autowired
     private SmsSender smsSender;
 
+    @Autowired
+    private DataCipherManager cipherManager;
+
     public LoginResponse login(LoginRequest loginRequest) {
         /**
          * TODO: Add the logic of login
@@ -441,6 +444,22 @@ public class ServiceManager {
                 healthWorker.getWorkLocations().remove(removeLocation);
                 healthWorkerRepository.save(healthWorker);
             }
+        }
+    }
+
+    public void encryptAll() {
+        Iterator<Patient> patientIterator = patientRepository.findAll().iterator();
+        Iterator<HealthWorker> healthWorkerIterator = healthWorkerRepository.findAll().iterator();
+        while (patientIterator.hasNext()) {
+            Patient p = patientIterator.next();
+            p.setFirstName(cipherManager.encrypt(p.getFirstName()));
+            p.setLastName(cipherManager.encrypt(p.getLastName()));
+            patientRepository.save(p);
+        }
+        while (healthWorkerIterator.hasNext()) {
+            HealthWorker healthWorker = healthWorkerIterator.next();
+            healthWorker.setName(cipherManager.encrypt(healthWorker.getName()));
+            healthWorkerRepository.save(healthWorker);
         }
     }
 }

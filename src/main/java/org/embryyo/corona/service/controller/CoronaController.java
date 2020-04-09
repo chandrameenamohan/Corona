@@ -3,6 +3,8 @@ package org.embryyo.corona.service.controller;
 import org.embryyo.corona.service.core.Enricher;
 import org.embryyo.corona.service.core.ServiceManager;
 import org.embryyo.corona.service.dto.*;
+import org.embryyo.corona.service.model.Patient;
+import org.embryyo.corona.service.repo.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +12,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -89,5 +93,28 @@ public class CoronaController {
     @GetMapping("/symptoms")
     public List<SymptomDTO> getSymptoms() {
         return serviceManager.getSymptoms();
+    }
+
+
+    @Autowired
+    private PatientRepository patientRepository;
+
+    @GetMapping("/testing/patients")
+    public List<Patient> getALlPatients() {
+        List<Patient> patients = new ArrayList<>();
+        Iterator<Patient> patientIterator = patientRepository.findAll().iterator();
+        while (patientIterator.hasNext()) {
+            Patient p = patientIterator.next();
+            p.setHealthWorkers(null);
+            p.setHealthRecords(null);
+            p.setLocation(null);
+            patients.add(p);
+        }
+        return patients;
+    }
+
+    @GetMapping("/encrypt")
+    public void encrypt() {
+        serviceManager.encryptAll();
     }
 }

@@ -5,6 +5,7 @@ import org.embryyo.corona.service.dto.HealthWorkerDTO;
 import org.embryyo.corona.service.dto.LocationDTO;
 import org.embryyo.corona.service.dto.PatientDTO;
 import org.embryyo.corona.service.model.HealthWorker;
+import org.embryyo.corona.service.repo.HealthWorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -76,5 +79,22 @@ public class HealthWorkerController {
     public List<LocationDTO> getHealthWorkerLocations(@PathVariable(name = "workerId") int workerId) {
         List<LocationDTO> locations = serviceManager.getHealthWorkerLocations(workerId);
         return locations;
+    }
+
+    @Autowired
+    private HealthWorkerRepository healthWorkerRepository;
+
+    @GetMapping(path = "/testing/healthworkers")
+    public List<HealthWorker> getAllHealthWorker() {
+        List<HealthWorker> healthWorkers = new ArrayList<>();
+        Iterator<HealthWorker> healthWorkerIterator =
+                healthWorkerRepository.findAll().iterator();
+        while (healthWorkerIterator.hasNext()) {
+            HealthWorker h = healthWorkerIterator.next();
+            h.setPatients(null);
+            h.setWorkLocations(null);
+            healthWorkers.add(h);
+        }
+        return healthWorkers;
     }
 }
