@@ -42,7 +42,7 @@ public class CoronaController {
     @PostMapping("/patients")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody PatientDTO patient, HttpServletRequest request,
-                         @RequestParam("healthWorkderId") int workerId,
+                         @RequestParam("healthWorkerId") int workerId,
                          HttpServletResponse response) {
         String token = request.getHeader("token");
         serviceManager.requestValidation(patient.getMobileNumber(), workerId, token);
@@ -54,7 +54,7 @@ public class CoronaController {
     @PostMapping("/patients/{id}")
     @ResponseStatus(HttpStatus.CREATED)
     public void editProfile(@RequestBody PatientDTO patient, @PathVariable("id") int id,
-                            @RequestParam("healthWorkderId") int workerId,
+                            @RequestParam("healthWorkerId") int workerId,
                             HttpServletRequest request,
                          HttpServletResponse response) {
         String token = request.getHeader("token");
@@ -67,7 +67,7 @@ public class CoronaController {
     @GetMapping("/patients/{id}")
     @ResponseStatus(HttpStatus.OK)
     public PatientDTO getPatient(@PathVariable("id") int id,
-                                 @RequestParam("healthWorkderId") int workerId,
+                                 @RequestParam("healthWorkerId") int workerId,
                                  HttpServletRequest request) {
         String token = request.getHeader("token");
         // TODO: Bad Auth Check; Just for testing level
@@ -79,14 +79,14 @@ public class CoronaController {
     @PostMapping("/patients/{id}/symptoms")
     @ResponseStatus(HttpStatus.CREATED)
     public void addPatientSymptom(@RequestBody RecordDTO record,
-                                  @RequestParam("healthWorkderId") int workerId,
+                                  @RequestParam("healthWorkerId") int workerId,
                            @PathVariable("id") int id, HttpServletRequest request) {
         serviceManager.addPatientSymptom(record,id,workerId,request.getHeader("token"));
     }
 
     @GetMapping("/patients/{id}/symptoms")
     public List<RecordDTO> getPatientSymptom(@PathVariable("id") int id,
-                                             @RequestParam("healthWorkderId") int workerId,
+                                             @RequestParam("healthWorkerId") int workerId,
                                              HttpServletRequest request) {
         return serviceManager.getPatientSymptoms(id,workerId,request.getHeader("token"));
     }
