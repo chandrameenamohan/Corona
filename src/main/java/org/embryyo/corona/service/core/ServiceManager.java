@@ -124,7 +124,11 @@ public class ServiceManager {
         return false;
     }
 
-    public void requestValidation(String number, String token) {
+    public void requestValidation(String number, int workerId, String token) {
+        if (workerId > 0) {
+            HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+            number = healthWorker.getMobile();
+        }
         Otp otpObj = otpRepository.findByMobileNumber(number);
         if (otpObj == null) {
             throw new NotFoundException(String
@@ -211,9 +215,9 @@ public class ServiceManager {
         return enricher.fromPatientDO(p);
     }
 
-    public void addPatientSymptom(RecordDTO record, int patientId, String token) {
+    public void addPatientSymptom(RecordDTO record, int patientId, int workerId, String token) {
         Patient p = patientRepository.findById(patientId).get();
-        requestValidation(p.getMobileNumber(),token);
+        requestValidation(p.getMobileNumber(), workerId, token);
 
         HealthRecord healthRecord = new HealthRecord();
         healthRecord.setNote(record.getNote());
@@ -255,9 +259,9 @@ public class ServiceManager {
         return symptomDTOS;
     }
 
-    public List<RecordDTO> getPatientSymptoms(int patientId, String token) {
+    public List<RecordDTO> getPatientSymptoms(int patientId, int workerId, String token) {
         Patient p = patientRepository.findById(patientId).get();
-        requestValidation(p.getMobileNumber(),token);
+        requestValidation(p.getMobileNumber(),workerId,token);
 
         Set<HealthRecord> healthRecords = p.getHealthRecords();
 
