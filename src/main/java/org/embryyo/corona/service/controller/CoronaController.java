@@ -115,6 +115,6 @@ public class CoronaController {
 
     @GetMapping("/encrypt")
     public void encrypt() {
-        serviceManager.encryptAll();
+//        serviceManager.encryptAll();
     }
 }
