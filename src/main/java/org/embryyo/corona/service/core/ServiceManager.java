@@ -421,8 +421,26 @@ public class ServiceManager {
     }
 
     public void mapWorkerAndLocations(int workerId, List<Integer> ids) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        Map<Integer,Location> idToLocation = new HashMap<>();
+        if (healthWorker.getWorkLocations() != null) {
+            Set<Location> locations = healthWorker.getWorkLocations();
+            for (Location location : locations) {
+                idToLocation.put(location.getId(),location);
+            }
+            for (Integer id : ids) {
+                idToLocation.remove(id);
+            }
+        }
         for (int locationId : ids) {
             mapWorkerAndLocation(workerId,locationId);
+        }
+        if (!idToLocation.isEmpty()) {
+            for (Integer id : idToLocation.keySet()) {
+                Location removeLocation = idToLocation.get(id);
+                healthWorker.getWorkLocations().remove(removeLocation);
+                healthWorkerRepository.save(healthWorker);
+            }
         }
     }
 }
