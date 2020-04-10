@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@CrossOrigin
 @RestController
 public class CoronaController {
 
@@ -24,6 +25,11 @@ public class CoronaController {
 
     @Autowired
     private Enricher patientEnricher;
+
+
+    @GetMapping("/")
+    @ResponseStatus(HttpStatus.OK)
+    public void isOk() {}
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
