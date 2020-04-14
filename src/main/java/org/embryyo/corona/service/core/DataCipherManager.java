@@ -28,6 +28,7 @@ public class DataCipherManager {
     private String transformation;
 
     public String encrypt(String value) {
+        if (value == null || value.isEmpty()) return value;
         try {
             byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             IvParameterSpec ivspec = new IvParameterSpec(iv);
@@ -55,6 +56,7 @@ public class DataCipherManager {
     }
 
     public String decrypt(String encrypted) {
+        if (encrypted == null || encrypted.isEmpty()) return encrypted;
         try {
             byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
             IvParameterSpec ivspec = new IvParameterSpec(iv);
