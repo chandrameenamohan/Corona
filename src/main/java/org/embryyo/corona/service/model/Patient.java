@@ -2,6 +2,7 @@ package org.embryyo.corona.service.model;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 @Entity
@@ -12,6 +13,13 @@ public class Patient {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "patient")
     private Set<HealthRecord> healthRecords;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id", nullable = false)
+    private Location location;
+
+    @ManyToMany(mappedBy = "patients", fetch = FetchType.LAZY)
+    Set<HealthWorker> healthWorkers;
 
     @Column(unique = true)
     private String patientId; // this is to match with his global patient-code
@@ -39,6 +47,13 @@ public class Patient {
     private String caseType; // mild, moderate, severe
     private String advice; // Home Quarantine, Admin and Test, call helpline, symptomatic management
     private boolean isHighRisk; // high-risk individuals
+
+    @Enumerated(EnumType.STRING)
+    private QuarantineType quarantineType; // home, quarantine-centre
+  
+    private Timestamp quarantineStartDate;
+    private Timestamp quarantineEndDate;
+
 
     public Integer getId() {
         return id;
@@ -206,5 +221,53 @@ public class Patient {
 
     public void setCovidRiskFactors(String covidRiskFactors) {
         this.covidRiskFactors = covidRiskFactors;
+    }
+
+    public QuarantineType getQuarantineType() {
+        return quarantineType;
+    }
+
+    public void setQuarantineType(QuarantineType quarantineType) {
+        this.quarantineType = quarantineType;
+    }
+
+    public Timestamp getQuarantineStartDate() {
+        return quarantineStartDate;
+    }
+
+    public void setQuarantineStartDate(Timestamp quarantineStartDate) {
+        this.quarantineStartDate = quarantineStartDate;
+    }
+
+    public Timestamp getQuarantineEndDate() {
+        return quarantineEndDate;
+    }
+
+    public void setQuarantineEndDate(Timestamp quarantineEndDate) {
+        this.quarantineEndDate = quarantineEndDate;
+    }
+  
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Set<HealthWorker> getHealthWorkers() {
+        return healthWorkers;
+    }
+
+    public void setHealthWorkers(Set<HealthWorker> healthWorkers) {
+        this.healthWorkers = healthWorkers;
+    }
+
+    public QuarantineType getQuarantineType() {
+        return quarantineType;
+    }
+
+    public void setQuarantineType(QuarantineType quarantineType) {
+        this.quarantineType = quarantineType;
     }
 }

@@ -37,6 +37,12 @@ public class ServiceManager {
     private HealthRecordRepository healthRecordRepository;
 
     @Autowired
+    private LocationRepository locationRepository;
+
+    @Autowired
+    private HealthWorkerRepository healthWorkerRepository;
+
+    @Autowired
     private Enricher enricher;
 
     @Autowired
@@ -221,5 +227,59 @@ public class ServiceManager {
         Patient p = enricher.fromPatientDTO(patient);
         p.setId(id);
         patientRepository.save(p);
+    }
+
+    public int addLocation(LocationDTO locationDTO) {
+        Location location = enricher.fromLocationDTO(locationDTO);
+        locationRepository.save(location);
+        return location.getId();
+    }
+
+    public int addHealthWorker(HealthWorkerDTO healthWorkerDTO) {
+        HealthWorker healthWorker = enricher.fromHealthWorkerDTO(healthWorkerDTO);
+        healthWorkerRepository.save(healthWorker);
+        return healthWorker.getId();
+    }
+
+    public void mapWorkerAndLocation(int workerId, int locationId) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        Location location = locationRepository.findById(locationId).get();
+        if (healthWorker.getWorkLocations() == null) {
+            healthWorker.setWorkLocations(new HashSet<>());
+        }
+        healthWorker.getWorkLocations().add(location);
+        if (location.getHealthWorkers() == null) {
+            location.setHealthWorkers(new HashSet<>());
+        }
+        location.getHealthWorkers().add(healthWorker);
+        healthWorkerRepository.save(healthWorker);
+        locationRepository.save(location);
+    }
+
+    public HealthWorkerDTO getHealthWorker(int id) {
+        HealthWorker healthWorker = healthWorkerRepository.findById(id).get();
+        HealthWorkerDTO healthWorkerDTO = enricher.fromHealthWorkerDO(healthWorker);
+        return healthWorkerDTO;
+    }
+
+    public LocationDTO getLocation(int id) {
+        Location location = locationRepository.findById(id).get();
+        LocationDTO locationDTO = enricher.fromLocationDO(location);
+        return locationDTO;
+    }
+
+    public void addPatientToHealthWorker(int workerId, int patientId) {
+        Patient p = patientRepository.findById(patientId).get();
+        HealthWorker healthWorker = healthWorkerRepository.findById(workerId).get();
+        if (healthWorker.getPatients() == null) {
+            healthWorker.setPatients(new HashSet<>());
+        }
+        healthWorker.getPatients().add(p);
+        if (p.getHealthWorkers() == null) {
+            p.setHealthWorkers(new HashSet<>());
+        }
+        p.getHealthWorkers().add(healthWorker);
+        patientRepository.save(p);
+        healthWorkerRepository.save(healthWorker);
     }
 }
